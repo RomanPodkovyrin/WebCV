@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpRequest
+from django.template.loader import render_to_string
 
 from blog.views import post_list
 
@@ -11,10 +12,7 @@ class HomePageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, post_list)
 
-    def test_post_list_returns_correct_html(self):
-        request = HttpRequest()
-        response = post_list(request)
-        html=response.content.decode('utf8')
-        self.assertTrue(html.startswith('\n<html>'))
-        self.assertIn('<title>WebCV</title>', html)
-        self.assertTrue(html.endswith('</html>'))
+    def test_post_list_returns_correct_html_template(self):
+        
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'blog/post_list.html')

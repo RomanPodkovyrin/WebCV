@@ -106,7 +106,8 @@ class AdminControlTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_post_list_table')
         rows = table.find_elements_by_class_name('post')
         self.assertTrue(
-            any('Admin test title ' + current_date_and_time in row.text and 'Admin test text for a post ' + current_date_and_time in row.text for row in rows)
+            any('Admin test title ' + current_date_and_time in row.text and 'Admin test text for a post ' + current_date_and_time in row.text for row in rows),
+            "New Post did not appear in the blog"
         )
 
 
