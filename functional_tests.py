@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 from datetime import datetime
-class NewVisitorTest(unittest.TestCase):
+class NewBlogVisitorTest(unittest.TestCase):
 
     def setUp(self):
         # Ben is an employer of Google, he want to look at roman's cv
@@ -21,7 +21,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn('WebCV', self.browser.title)
         
         header = self.browser.find_element_by_tag_name('h1')
-        self.assertIn('WebCV', header.text)
+        self.assertIn('Blog', header.text)
 
         # In the homepage he can see posts
 
@@ -41,18 +41,13 @@ class NewVisitorTest(unittest.TestCase):
     def test_cannot_edit_post(self):
         self.fail('Finish visitor edit post test')
 
-    def test_can_open_web_cv(self):
-        ###############cv##################
-        # Bob then clicks "cv" the website load a new page with roman's CV
-        self.fail('Finish CV test')
-
     def test_can_open_contacts(self):
         ###############contact##################
         # Bob then clicks "contact" the website loads a new page with contact information
         self.fail('Finish contacts test')
 
 
-class AdminControlTest(unittest.TestCase):
+class AdminBlogControlTest(unittest.TestCase):
 
     def setUp(self):
         # Beth is the administrator of the site
@@ -115,6 +110,35 @@ class AdminControlTest(unittest.TestCase):
     def test_admin_add_new_post_retain(self):
         self.fail('Finish new post retain test')
 
+
+class NewCVVisitorTest(unittest.TestCase):
+    # James in an employer, who want's too look at roman's cv
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+    
+    def test_can_see_and_read_cv(self):
+        # James loads the website
+        self.browser.get('http://localhost:8000/')
+
+        # James clicks the "CV" in the menu option
+        cv_button = self.browser.find_element_by_id('id_cv_link_button')
+        cv_button.click()
+
+        # james is redirected to a cv webpage
+        self.assertEqual(self.browser.current_url, 'http://localhost:8000/cv/', "wasn't redirected to a cv url")
+        self.assertIn('WebCV', self.browser.title)
+        header = self.browser.find_element_by_tag_name('h1')
+        self.assertIn('CV', header.text)
+
+
+        # James can see the correct cv template
+
+        # He sees the name of the person to whome the cv belongs. 
+        
 
 
 if __name__ == '__main__':
