@@ -7,6 +7,7 @@ import time
 from datetime import datetime
 
 from blog.views import post_list, cv_page, post_new
+from blog.models import Post
 
 
 class BlogHomePageTest(TestCase):
@@ -48,22 +49,51 @@ class BlogHomePageTest(TestCase):
         # self.client
         # self.client.force_authenticate(user=user)
         date = str(datetime.now())
-        response = self.client.post('/post/new/', data={'title': 'Unittest title test ' + date , 'text': 'Unittest text test ' + date})
-        
-        # self.assertIn('A new list item', response.content.decode())
+        title = 'Unittest title test ' + date 
+        text = 'Unittest text test ' + date
+        response1 = self.client.post('/post/new/', data={'title': title, 'text': text})
 
-        response = self.client.get('/')
-        print("Contents",response.content.decode())
-        self.assertIn('Unittest title test ' + date, response.content.decode())
-        self.assertIn('Unittest text test ' + date, response.content.decode())
-#########################
-        # request = HttpRequest()
-        # request.user = User.objects.create(username='roman',password='1234')
-        # request.method='POST'
-        # request.POST['title'] = 'Test title'
-        # request.POST['text'] = 'Test text'
-        # response = post_new(request)
+        self.assertEqual(Post.objects.count(), 1)
+        post = Post.objects.first()
+        self.assertEqual(title,post.title)
+        self.assertEqual(text,post.text)
+
         
+        self.assertEqual(response1.status_code,302)
+        self.assertEqual(response1['location'],'/post/1/')
+
+        response2 = self.client.get(response1['location'])
+        self.assertIn(title, response2.content.decode())
+        self.assertIn(text, response2.content.decode())
+
+        response3 = self.client.get('/')
+        self.assertIn(title, response3.content.decode())
+        self.assertIn(text, response3.content.decode())
+
+        
+    def test_saving_and_retrieving_times(self):
+
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+        self.assertEqual(Post.objects.all().count(), 0)
+
+        Post.objects.create(author=me,title='Sample unit test title', text='Test')
+
+        self.assertEqual(Post.objects.all().count(), 1)
+
+        Post.objects.create(author=me,title='Sample unit test title2', text='Test2')
+
+        self.assertEqual(Post.objects.all().count(), 2)
+
+        saved = Post.objects.all()
+        self.assertEqual(saved[0].title, 'Sample unit test title')
+        self.assertEqual(saved[0].text, 'Test')
+
+        self.assertEqual(saved[1].title, 'Sample unit test title2')
+        self.assertEqual(saved[1].text, 'Test2')
+
+
+
 
 
 

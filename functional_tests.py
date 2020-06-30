@@ -146,6 +146,7 @@ class NewCVVisitorTest(unittest.TestCase):
 
 
         # James can see the correct cv template
+        print(self.browser.find_element_by_id('id_cv_form'))
         self.assertTrue(
             all(item in self.browser.find_element_by_id('id_cv_form').text for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_contacts']),
             'Not all cv items are present '
