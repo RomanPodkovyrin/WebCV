@@ -8,6 +8,7 @@ class NewBlogVisitorTest(unittest.TestCase):
     def setUp(self):
         # Ben is an employer of Google, he want to look at roman's cv
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
 
     def tearDown(self):
         # Bob likes Roman's cv, so he is going to hire him
@@ -20,8 +21,12 @@ class NewBlogVisitorTest(unittest.TestCase):
         # He notices the page title and header mention web cv
         self.assertIn('WebCV', self.browser.title)
         
-        header = self.browser.find_element_by_tag_name('h1')
-        self.assertIn('Blog', header.text)
+        headers = self.browser.find_elements_by_tag_name('h1')
+        self.assertTrue(
+            any('Blog' in header.text for header in headers),
+            "Did't find Blog in header"
+        )
+        # self.assertIn('Blog', header.text)
 
         # In the homepage he can see posts
 
@@ -52,6 +57,7 @@ class AdminBlogControlTest(unittest.TestCase):
     def setUp(self):
         # Beth is the administrator of the site
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
 
         # She go to the website
         self.browser.get('http://localhost:8000/admin')
@@ -116,6 +122,7 @@ class NewCVVisitorTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
@@ -131,13 +138,21 @@ class NewCVVisitorTest(unittest.TestCase):
         # james is redirected to a cv webpage
         self.assertEqual(self.browser.current_url, 'http://localhost:8000/cv/', "wasn't redirected to a cv url")
         self.assertIn('WebCV', self.browser.title)
-        header = self.browser.find_element_by_tag_name('h1')
-        self.assertIn('CV', header.text)
+        headers = self.browser.find_elements_by_tag_name('h1')
+        self.assertTrue(
+            any('CV' in header.text for header in headers),
+            "Did't find CV in header"
+        )
 
 
         # James can see the correct cv template
+        self.assertTrue(
+            all(item in self.browser.find_element_by_id('id_cv_form').text for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills']),
+            'Not all cv items are present '
+        )
 
         # He sees the name of the person to whome the cv belongs. 
+        self.fail('Finish cv tests')
         
 
 

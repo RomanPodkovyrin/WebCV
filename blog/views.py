@@ -5,7 +5,7 @@ from .forms import PostForm
 
 # Create your views here.
 def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
@@ -13,12 +13,17 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post})
 
 def post_new(request):
+    # print('hello')
     if request.method == "POST":# Accessing page for the first time an we want a blank form
+        # print('Post')
         form = PostForm(request.POST)
         if form.is_valid():# Checking if the form is correct
+            # print('Valid')
             # Saving it
             post = form.save(commit=False)# false means we don't want to save the post model yet
+            # print(post.pk)
             post.author = request.user
+            # print('User', post.author)
             post.published_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)# redirects us to the new post
