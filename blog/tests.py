@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 import time
+from datetime import datetime
 
 from blog.views import post_list, cv_page, post_new
 
@@ -23,35 +24,38 @@ class BlogHomePageTest(TestCase):
         response = self.client.get('/post/new/')
         self.assertTemplateUsed(response, 'blog/post_edit.html')
     
-    def test_post_list_can_remember_post_requests(self):
+    def test_post_list_can_remember_POST_requests(self):
 
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(username='roman', email='example@gmail.com', password='1234')
+        # self.factory = RequestFactory()
+        # self.user = User.objects.create_user(username='roman', email='example@gmail.com', password='1234')
 
-        request = self.factory.post('/post/new/', data={'title': 'A new list item', 'text': 'hehe'})
+        # request = self.factory.post('/post/new/', data={'title': 'A new list item', 'text': 'hehe'})
 
-        # logged-in user by setting request.user manually.
-        request.user = self.user
+        # # logged-in user by setting request.user manually.
+        # request.user = self.user
 
-        # Test my_view() as if it were deployed at /customer/details
-        response = post_new(request)
-        print(response)
+        # # Test my_view() as if it were deployed at /customer/details
+        # response = post_new(request)
+        # print(response)
 
         #############
 
-        # # self.client.login(username=self.TEST_USER_USERNAME, password=self.TEST_USER_PASSWORD)
-        # self.client.login(username='roman',email='example@gmail.com', password='1234')
-        # user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
-        # self.client.force_login(user)
+        # self.client.login(username=self.TEST_USER_USERNAME, password=self.TEST_USER_PASSWORD)
+        self.client.login(username='roman',email='example@gmail.com', password='1234')
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
         
-        # # self.client
-        # # self.client.force_authenticate(user=user)
-        # response = self.client.post('/post/new/', data={'title': 'A new list item', 'text': 'hehe'})
-        # print(response.content.decode())
+        # self.client
+        # self.client.force_authenticate(user=user)
+        date = str(datetime.now())
+        response = self.client.post('/post/new/', data={'title': 'Unittest title test ' + date , 'text': 'Unittest text test ' + date})
+        
         # self.assertIn('A new list item', response.content.decode())
 
-        # response = self.client.get('/')
-        # self.assertIn('A new list item', response.content.decode())
+        response = self.client.get('/')
+        print("Contents",response.content.decode())
+        self.assertIn('Unittest title test ' + date, response.content.decode())
+        self.assertIn('Unittest text test ' + date, response.content.decode())
 #########################
         # request = HttpRequest()
         # request.user = User.objects.create(username='roman',password='1234')
@@ -59,7 +63,6 @@ class BlogHomePageTest(TestCase):
         # request.POST['title'] = 'Test title'
         # request.POST['text'] = 'Test text'
         # response = post_new(request)
-        self.fail('Does not work')
         
 
 
