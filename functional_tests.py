@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 from datetime import datetime
+
 class NewBlogVisitorTest(unittest.TestCase):
 
     def setUp(self):
@@ -26,30 +27,40 @@ class NewBlogVisitorTest(unittest.TestCase):
             any('Blog' in header.text for header in headers),
             "Did't find Blog in header"
         )
-        # self.assertIn('Blog', header.text)
 
-        # In the homepage he can see posts
+    def test_cannot_add_new_post_with_button(self):
 
-        # He can see tabs for posts, cv and contact
+        self.browser.get("http://localhost:8000/")
+        # test that user cannot click on the button to add
+        try:
+            add_post = self.browser.find_element_by_id("add_new_post")
+            add_post.click()
+            self.fail("Visitor is not ment to be able to add a new post")
+        except:
+            pass
 
-        ###############Posts##################
-        # He can see a post called "Using Django" and a part of the text with the date it was published
+    
+    def test_cannont_add_new_post_with_url(self):
+        self.browser.get("http://localhost:8000/post/new/")
+        self.assertIn('Page not found', self.browser.title)
 
-        # He clicks it to read more about it
+    def test_cannot_edit_post_with_button(self):
 
-        # There is no way of editing this blog post so he can only read it
-        self.fail('Finish blog test')
+        self.browser.get("http://localhost:8000/post/1/")
+        # test that user cannot click on the button to edit
+        try:
+            edit_post = self.browser.find_element_by_id("id_edit_post_button")
+            edit_post.click()
+            self.fail("Visitor is not supposed to be able to edit a post")
+        except:
+            pass
 
-    def test_cannot_add_new_post(self):
-        self.fail('Finish visitor add new post test')
 
-    def test_cannot_edit_post(self):
-        self.fail('Finish visitor edit post test')
+    def test_cannot_edit_post_with_url(self):
+        self.browser.get("http://localhost:8000/post/new/")
+        self.assertIn('Page not found', self.browser.title)
 
-    def test_can_open_contacts(self):
-        ###############contact##################
-        # Bob then clicks "contact" the website loads a new page with contact information
-        self.fail('Finish contacts test')
+
 
 
 class AdminBlogControlTest(unittest.TestCase):
@@ -112,14 +123,10 @@ class AdminBlogControlTest(unittest.TestCase):
         )
 
 
-    
-    def test_admin_add_new_post_retain(self):
-        self.fail('Finish new post retain test')
-
 
 class NewCVVisitorTest(unittest.TestCase):
-    # James in an employer, who want's too look at roman's cv
 
+    # James in an employer, who want's too look at roman's cv
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
@@ -146,15 +153,115 @@ class NewCVVisitorTest(unittest.TestCase):
 
 
         # James can see the correct cv template
-        print(self.browser.find_element_by_id('id_cv_form'))
-        self.assertTrue(
-            all(item in self.browser.find_element_by_id('id_cv_form').text for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_contacts']),
-            'Not all cv items are present '
-        )
+       
+        page_source = self.browser.page_source
+        for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_contacts']:
+            self.assertIn(item, page_source)
 
         # He sees the name of the person to whome the cv belongs. 
         self.fail('Finish cv tests')
         
+    def test_visitor_cannot_edit_cv_with_button(self):
+        # James tries to edit the cv
+        self.browser.get('http://localhost:8000/cv')
+        
+
+        # he looks for the button
+        try:
+            edit_cv = self.browser.find_element_by_id("id_edit_cv_button")
+        except:
+            edit_cv = None
+        # But there is no button 
+        self.assertIsNone(edit_cv)
+        
+        # So he cannot click the booton 
+        try:
+            edit_cv.click()
+            self.fail("normal user was not supposed to click edit button")
+        except:
+            pass
+
+        # Therefore he stays on the root page
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        
+
+    def test_visitor_cannot_edit_cv_with_url(self):
+
+        # So now he tries to go to the url diriectly  
+        self.browser.get('http://localhost:8000/cv/edit')
+        # But that does not work
+        self.assertIn('Page not found', self.browser.title)
+
+
+class AdminCVTests(unittest.TestCase):
+    # Roman is the administrator
+
+    def setUp(self):
+        # He login as an administrator
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
+
+        # He go to the website
+        self.browser.get('http://localhost:8000/admin')
+
+        
+        username = self.browser.find_element_by_id('id_username')
+        password = self.browser.find_element_by_id('id_password')
+
+        username.send_keys('roman')
+        password.send_keys('1234')
+
+        
+        password.send_keys(Keys.ENTER)
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def test_can_edit_cv(self):
+        # Roman goes to cv url
+        self.browser.get('http://localhost:8000/admin')
+
+        # He click edit button
+
+        current_date_and_time = str(datetime.now())
+        
+        # Adds his name
+        name = self.browser.find_element_by_id('id_name')
+        nametext = 'Roman ' + current_date_and_time
+        name.send_keys(nametext)
+
+        # adds his personal statement
+
+        # adds skills
+
+        # adds work experience
+
+        # adds education
+
+        # submits
+
+        save_button = self.browser.find_element_by_id("id_save_button")
+        save_button.click()
+
+        # gets redirected
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        # checks
+
+        # name
+        self.assertEqual(self.browser.find_element_by_id("id_name").text,nametext)
+
+        
+        # personal statement
+
+        # skills
+
+        # work experience
+
+        # education
+        self.fail("Finish")
+
 
 
 if __name__ == '__main__':

@@ -27,20 +27,6 @@ class BlogHomePageTest(TestCase):
     
     def test_post_list_can_remember_POST_requests(self):
 
-        # self.factory = RequestFactory()
-        # self.user = User.objects.create_user(username='roman', email='example@gmail.com', password='1234')
-
-        # request = self.factory.post('/post/new/', data={'title': 'A new list item', 'text': 'hehe'})
-
-        # # logged-in user by setting request.user manually.
-        # request.user = self.user
-
-        # # Test my_view() as if it were deployed at /customer/details
-        # response = post_new(request)
-        # print(response)
-
-        #############
-
         # self.client.login(username=self.TEST_USER_USERNAME, password=self.TEST_USER_PASSWORD)
         self.client.login(username='roman',email='example@gmail.com', password='1234')
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -51,10 +37,11 @@ class BlogHomePageTest(TestCase):
         date = str(datetime.now())
         title = 'Unittest title test ' + date 
         text = 'Unittest text test ' + date
+        self.assertEqual(Post.objects.count(), 0)
         response1 = self.client.post('/post/new/', data={'title': title, 'text': text})
 
         self.assertEqual(Post.objects.count(), 1)
-        post = Post.objects.first()
+        post = Post.objects.first()# or Post.objects.all()[0]
         self.assertEqual(title,post.title)
         self.assertEqual(text,post.text)
 
@@ -70,7 +57,10 @@ class BlogHomePageTest(TestCase):
         self.assertIn(title, response3.content.decode())
         self.assertIn(text, response3.content.decode())
 
-        
+
+
+class PostModelTest(TestCase):
+
     def test_saving_and_retrieving_times(self):
 
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -108,3 +98,37 @@ class CVHomePageTest(TestCase):
         
         response = self.client.get('/cv/')
         self.assertTemplateUsed(response,'blog/cv_page.html')
+
+    def test_cv_edit_returns_correct_html_template(self):
+
+        response = self.client.get('/cv/edit/')
+        self.assertTemplateUsed(response,'blog/cv_edit.html')
+
+    def test_cv_edit_can_remember_POST_requests(self):
+
+        self.client.login(username='roman',email='example@gmail.com', password='1234')
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+        
+        # date = str(datetime.now())
+        # title = 'Unittest title test ' + date 
+        # text = 'Unittest text test ' + date
+        # self.assertEqual(Post.objects.count(), 0)
+        # response1 = self.client.post('/post/new/', data={'title': title, 'text': text})
+
+        # self.assertEqual(Post.objects.count(), 1)
+        # post = Post.objects.first()# or Post.objects.all()[0]
+        # self.assertEqual(title,post.title)
+        # self.assertEqual(text,post.text)
+
+        
+        # self.assertEqual(response1.status_code,302)
+        # self.assertEqual(response1['location'],'/cv/')
+
+        # response2 = self.client.get(response1['location'])
+        # self.assertIn(title, response2.content.decode())
+        # self.assertIn(text, response2.content.decode())
+
+        # response3 = self.client.get('/')
+        # self.assertIn(title, response3.content.decode())
+        # self.assertIn(text, response3.content.decode())
