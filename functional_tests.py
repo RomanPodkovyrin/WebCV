@@ -158,8 +158,6 @@ class NewCVVisitorTest(unittest.TestCase):
         for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_contacts']:
             self.assertIn(item, page_source)
 
-        # He sees the name of the person to whome the cv belongs. 
-        self.fail('Finish cv tests')
         
     def test_visitor_cannot_edit_cv_with_button(self):
         # James tries to edit the cv
@@ -214,19 +212,20 @@ class AdminCVTests(unittest.TestCase):
 
         
         password.send_keys(Keys.ENTER)
+        time.sleep(1)
 
     def tearDown(self):
         self.browser.quit()
 
     def test_can_edit_cv(self):
         # Roman goes to cv url
-        self.browser.get('http://localhost:8000/admin')
+        self.browser.get('http://localhost:8000/cv/')
 
         # He click edit button
         edit_cv = self.browser.find_element_by_id("id_edit_cv_button")
         edit_cv.click()
         time.sleep(1)
-        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/edit")
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/edit/")
 
         current_date_and_time = str(datetime.now())
         

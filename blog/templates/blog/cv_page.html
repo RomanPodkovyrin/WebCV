@@ -1,9 +1,112 @@
-<html>
-    <head>
-        <title>My blog</title>
-    </head>
-    <body>
-        <p>Hello</p>
-        <p>Internet !</p>
-    </body>
-</html>
+{% extends 'blog/base.html' %}
+
+<!-- {% block title %}help{% endblock %} -->
+
+{% block content %}
+{% if user.is_authenticated %}
+<a class="btn btn-default" id="id_edit_cv_button" href="{% url 'cv_edit' %}"><span class="glyphicon glyphicon-pencil"></span></a>
+{% endif %}
+<div id="id_cv_form">
+	<div>
+		<div id="headshot">
+			<img src="headshot.jpg" alt="image" />
+		</div>
+		
+		<div id="id_name">
+			<h1>Roman Podkovyrin</h1>
+			<h2>Job Title</h2>
+		</div>
+		
+		<div id="id_contacts">
+			<ul>
+				<li>email: <a href="mailto:joe@bloggs.com" target="_blank">joe@bloggs.com</a></li>
+				<li>m: 01234567890</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div id="id_personal_statement">
+		<section>
+			<article>
+				<div>
+					<h1>Personal Profile</h1>
+				</div>
+				
+				<div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dolor metus, interdum at scelerisque in, porta at lacus. Maecenas dapibus luctus cursus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim. Vestibulum bibendum mattis dignissim. Proin id sapien quis libero interdum porttitor.</p>
+				</div>
+			</article>
+		</section>
+	</div>
+
+
+	<div id="id_work_experience">	
+		<section>
+			<div >
+				<h1>Work Experience</h1>
+			</div>
+			
+			<div>
+				<article>
+					<h2>Job Title at Company</h2>
+					<p>April 2011 - Present</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim. Vestibulum bibendum mattis dignissim. Proin id sapien quis libero interdum porttitor.</p>
+				</article>
+				
+				<article>
+					<h2>Job Title at Company</h2>
+					<p>Janruary 2007 - March 2011</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim. Vestibulum bibendum mattis dignissim. Proin id sapien quis libero interdum porttitor.</p>
+				</article>
+				
+				<article>
+					<h2>Job Title at Company</h2>
+					<p>October 2004 - December 2006</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim. Vestibulum bibendum mattis dignissim. Proin id sapien quis libero interdum porttitor.</p>
+				</article>
+			</div>
+		</section>
+	</div>	
+	
+	<section>
+		<div>
+			<h1>Key Skills</h1>
+		</div>
+		
+		<div">
+			<ul id="id_skills">
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+				<li>A Key Skill</li>
+			</ul>
+		</div>
+	</section>
+	
+	
+	<section>
+		<div id="id_education">
+			<h1>Education</h1>
+		</div>
+		
+		<div>
+			<article>
+				<h2>College/University</h2>
+				<p>Qualification</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim.</p>
+			</article>
+			
+			<article>
+				<h2>College/University</h2>
+				<p</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim.</p>
+			</article>
+		</div>
+	</section>
+		
+</div>
+{% endblock %}

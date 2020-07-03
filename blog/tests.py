@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 import time
 from datetime import datetime
 
-from blog.views import post_list, cv_page, post_new
-from blog.models import Post
+from blog.views import post_list, cv_page, post_new, cv_edit
+from blog.models import Post, CV
 
 
 class BlogHomePageTest(TestCase):
@@ -136,3 +136,8 @@ class CVHomePageTest(TestCase):
         # response3 = self.client.get('/')
         # self.assertIn(title, response3.content.decode())
         # self.assertIn(text, response3.content.decode())
+
+class CVModelTest (TestCase):
+
+    def test_saving_and_retrieving_times(self):
+

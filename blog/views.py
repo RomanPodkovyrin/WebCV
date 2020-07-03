@@ -48,3 +48,6 @@ def post_edit(request, pk):
 
 def cv_page(request):
     return render(request, 'blog/cv_page.html', {})
+
+def cv_edit(request):
+    return render(request, 'blog/cv_edit.html', {})
