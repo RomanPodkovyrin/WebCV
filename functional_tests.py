@@ -223,6 +223,10 @@ class AdminCVTests(unittest.TestCase):
         self.browser.get('http://localhost:8000/admin')
 
         # He click edit button
+        edit_cv = self.browser.find_element_by_id("id_edit_cv_button")
+        edit_cv.click()
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/edit")
 
         current_date_and_time = str(datetime.now())
         
@@ -232,13 +236,33 @@ class AdminCVTests(unittest.TestCase):
         name.send_keys(nametext)
 
         # adds his personal statement
+        personal_statement = self.browser.find_element_by_id('id_personal_statement')
+        personal_statement_text = 'Roman ' + current_date_and_time
+        personal_statement.send_keys(personal_statement_text)
 
-        # adds skills
+        # adds skills 3 defaults
+        skills = self.browser.find_elements_by_id('id_skills')
+        self.assertEqual(len(skills), 3)
+         # Add more skills button
+        add_skills = self.browser.find_element_by_id('id_add_skills_button')
+        add_skills.click()
+        skills = self.browser.find_elements_by_id('id_skills')
+        self.assertEqual(len(skills), 4)
 
-        # adds work experience
+        for i in range(len(skills)):
+            skills[i].send_keys((i + 1) + " " + current_date_and_time)
 
-        # adds education
 
+        # adds work experience 1 default
+        work = self.browser.find_elements_by_id('id_work_experience')
+        self.assertEqual(len(work), 1)
+        add_work = self.browser.find_element_by_id('id_add_skills_button')
+        add_skills.click()
+        # adds education 1 default
+        'id_education'
+
+        # adds contacts (email and phone number)
+        'id_contacts'
         # submits
 
         save_button = self.browser.find_element_by_id("id_save_button")
@@ -254,12 +278,15 @@ class AdminCVTests(unittest.TestCase):
 
         
         # personal statement
+        self.assertEqual(self.browser.find_element_by_id("id_personal_statement").text,personal_statement_text)
 
         # skills
 
         # work experience
 
         # education
+
+        contacts
         self.fail("Finish")
 
 

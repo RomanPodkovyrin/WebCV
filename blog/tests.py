@@ -110,11 +110,15 @@ class CVHomePageTest(TestCase):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
         
-        # date = str(datetime.now())
-        # title = 'Unittest title test ' + date 
-        # text = 'Unittest text test ' + date
-        # self.assertEqual(Post.objects.count(), 0)
-        # response1 = self.client.post('/post/new/', data={'title': title, 'text': text})
+        date = str(datetime.now())
+        name = 'Roman Podkovyrin ' + date 
+        personal_statement = 'Personal Statement ' + date
+        skills = '["Java", "Python", "Russian"]'
+        work_experience = '["company": "Google", "description": "It was good", "duration": 03/19-04/20]'
+        education = '["school": "RRS", "grades": "AAA*", "duration": "09/13-05/17"]'
+        contacts = {"phone": "00000000", "email": "email@example.com"}
+        self.assertEqual(Post.objects.count(), 0)
+        response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement, "skills": skills, "work_experinece": work_experience, "education": education, "contacts": contacts})
 
         # self.assertEqual(Post.objects.count(), 1)
         # post = Post.objects.first()# or Post.objects.all()[0]
