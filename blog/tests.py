@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 from blog.views import post_list, cv_page, post_new, cv_edit
-from blog.models import Post, CV
+from blog.models import Post, CV, Work, Education
 
 
 class BlogHomePageTest(TestCase):
@@ -116,9 +116,10 @@ class CVHomePageTest(TestCase):
         skills = '["Java", "Python", "Russian"]'
         work_experience = '["company": "Google", "description": "It was good", "duration": 03/19-04/20]'
         education = '["school": "RRS", "grades": "AAA*", "duration": "09/13-05/17"]'
-        contacts = {"phone": "00000000", "email": "email@example.com"}
         self.assertEqual(Post.objects.count(), 0)
-        response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement, "skills": skills, "work_experinece": work_experience, "education": education, "contacts": contacts})
+        response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement,
+         "skills": skills, "work_experinece": work_experience, "education": education, "phone": "00000000",
+          "email": "email@example.com"})
 
         # self.assertEqual(Post.objects.count(), 1)
         # post = Post.objects.first()# or Post.objects.all()[0]
@@ -141,3 +142,52 @@ class CVModelTest (TestCase):
 
     def test_saving_and_retrieving_times(self):
 
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+        self.assertEqual(CV.objects.all().count(), 0)
+
+        Work.objects.create(company="Google", description="Help me", duration="2000-2012")
+        Education.objects.create(school="RRS", grade="AAA*", duration="2013-2017")
+
+        CV.objects.create(author=me,name="Roman Podkovyrin", statement="Hello, please hire me",
+        skills=["Java", "python","russina"], work=Work.objects.all(),education=Education.objects.all(),phone="0000000",email="email@mail.com")
+
+        self.assertEqual(CV.objects.all().count(), 1)
+        self.assertEqual(Work.objects.all().count(), 1)
+        self.assertEqual(Education.objects.all().count(), 1)
+
+        savedCV= CV.objects.first
+        self.assertEqual(savedCV.name, "Roman Podkovyrin")
+        self.assertEqual(savedCV.statement, "Hello, please hire me")
+        self.assertEqual(savedCV.phone, "0000000")
+        self.assertEqual(savedCV.email, "email@mail.com")
+
+        worktest = savedCV.work
+        self.assertEqual(worktest.all().count(), 1)
+        worktest=worktest.first()
+        self.assertEqual(worktest.company, "Google")
+        self.assertEqual(worktest.education, "Help me")
+        self.assertEqual(worktest.duration, "2000-2012")
+
+        educationtest = savedCV.education
+        self.assertEqual(educationtest.all().count(), 1)
+        educationtest = educationtest.first()
+        self.assertEqual(educationtest.school, "RRS")
+        self.assertEqual(educationtest.grade, "AAA*")
+        self.assertEqual(educationtest.duration,"2013-2017" )
+        self.fail("Finish check for work and eduation")
+
+        Post.objects.first().update(name="Roman Podkovyrin2", statement="Hello, please hire me2",
+        skills=["Java2", "python2","russina2"], work=Work.objects.all(),education=Education.objects.all(),phone="00000002",email="email@mail.com2")
+
+        self.assertEqual(CV.objects.all().count(), 1)
+        self.assertEqual(Work.objects.all().count(), 1)
+        self.assertEqual(Education.objects.all().count(), 1)
+
+        # saved = Post.objects.all()
+        # self.assertEqual(saved[0].title, 'Sample unit test title')
+        # self.assertEqual(saved[0].text, 'Test')
+
+        # self.assertEqual(saved[1].title, 'Sample unit test title2')
+        # self.assertEqual(saved[1].text, 'Test2')
+        self.fail("Finish test")

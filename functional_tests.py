@@ -155,7 +155,7 @@ class NewCVVisitorTest(unittest.TestCase):
         # James can see the correct cv template
        
         page_source = self.browser.page_source
-        for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_contacts']:
+        for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_phone', 'id_email']:
             self.assertIn(item, page_source)
 
         
