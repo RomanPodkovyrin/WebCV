@@ -154,18 +154,18 @@ class CVModelTest (TestCase):
         work_experience = '[{"company": "Google", "description": "It was good", "duration": 03/19-04/20}]'
         education = '[{"school": "RRS", "grades": "AAA*", "duration": "09/13-05/17"}]'
 
-        CV.objects.create(name="Roman Podkovyrin", statement="Hello, please hire me",
-        skills=skills, work=work_experience,education=education,phone="0000000",email="email@mail.com")
+        CV.objects.create(name="Roman Podkovyrin", personal_statement="Hello, please hire me",
+        skills=skills, work_experience=work_experience,education=education,phone="0000000",email="email@mail.com")
 
         self.assertEqual(CV.objects.all().count(), 1)
 
         savedCV= CV.objects.first()
         self.assertEqual(savedCV.name, "Roman Podkovyrin")
-        self.assertEqual(savedCV.statement, "Hello, please hire me")
+        self.assertEqual(savedCV.personal_statement, "Hello, please hire me")
         self.assertEqual(savedCV.phone, "0000000")
         self.assertEqual(savedCV.email, "email@mail.com")
 
-        self.assertEqual(savedCV.work, work_experience)
+        self.assertEqual(savedCV.work_experience, work_experience)
 
         self.assertEqual(savedCV.education, education)
         self.assertEqual(savedCV.skills, skills)
@@ -174,18 +174,18 @@ class CVModelTest (TestCase):
         skills2 = '["Java2", "python2","russian2"]'
         work_experience2 = '[{"company": "Google2", "description": "It was good2", "duration": 03/19-04/202}]'
         education2 = '[{"school": "RRS2", "grades": "AAA*2", "duration": "09/13-05/172"}]'
-        CV.objects.all().update(name="Roman Podkovyrin2", statement="Hello, please hire me2",
-        skills=skills2, work=work_experience2,education=education2,phone="00000002",email="email@mail.com2")
+        CV.objects.all().update(name="Roman Podkovyrin2", personal_statement="Hello, please hire me2",
+        skills=skills2, work_experience=work_experience2,education=education2,phone="00000002",email="email@mail.com2")
 
         self.assertEqual(CV.objects.all().count(), 1)
 
         savedCV2 = CV.objects.first()
         self.assertEqual(savedCV2.name, "Roman Podkovyrin2")
-        self.assertEqual(savedCV2.statement, "Hello, please hire me2")
+        self.assertEqual(savedCV2.personal_statement, "Hello, please hire me2")
         self.assertEqual(savedCV2.phone, "00000002")
         self.assertEqual(savedCV2.email, "email@mail.com2")
 
-        self.assertEqual(savedCV2.work, work_experience2)
+        self.assertEqual(savedCV2.work_experience, work_experience2)
 
         self.assertEqual(savedCV2.education, education2)
         self.assertEqual(savedCV2.skills, skills2)
