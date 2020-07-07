@@ -16,3 +16,24 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class CV(models.Model):
+    name = models.CharField(max_length=200)#models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    statement = models.TextField()
+    skills = models.CharField(max_length=200, default='[]')
+    work = models.CharField(max_length=500, default='[]')
+    education = models.CharField(max_length=400, default='[]')
+    phone = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
+
+    def set_skills(self, x):
+        self.skills = json.dumps(x)
+
+    def get_skills(self):
+        return json.load(self.skills)
+
+    def __str__(self):
+        return self.name
+
