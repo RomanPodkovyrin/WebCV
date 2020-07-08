@@ -146,10 +146,7 @@ class CVHomePageTest(TestCase):
 
     def test_cv_edit_can_remember_POST_requests(self):
 
-        self.fail("Redo the test")
-
         # Login
-        self.client.login(username='roman',email='example@gmail.com', password='1234')
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
         
@@ -158,16 +155,16 @@ class CVHomePageTest(TestCase):
         response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement,
          "skills": skills, "email": email, "phone": phone})
 
-        # Check data was saved into the database
+        # data was saved into the database
         self.assertEqual(CV.objects.count(),1)
         savedCV= CV.objects.first()
         check_cv_data(self, savedCV, {'name': name, 'personal_statement': personal_statement,"skills": skills, "email": email, "phone": phone})
         
-        # Check was redirected to the right page
+        # redirected to the right page
         self.assertEqual(response1.status_code,302)
         self.assertEqual(response1['location'],'/cv/')
 
-        # Check information added is displayed on the page
+        # information added is displayed on the page
         response2 = self.client.get(response1['location'])
         self.assertIn(name, response2.content.decode())
         self.assertIn(personal_statement, response2.content.decode())
