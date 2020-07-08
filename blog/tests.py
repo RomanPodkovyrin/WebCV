@@ -10,6 +10,8 @@ from blog.views import post_list, cv_page, post_new, cv_edit
 from blog.models import Post, CV
 
 
+#################### Blog ####################
+
 class BlogHomePageTest(TestCase):
 
     def test_root_url_resolves_to_post_list_view(self):
@@ -27,54 +29,58 @@ class BlogHomePageTest(TestCase):
     
     def test_post_list_can_remember_POST_requests(self):
 
-        # self.client.login(username=self.TEST_USER_USERNAME, password=self.TEST_USER_PASSWORD)
-        self.client.login(username='roman',email='example@gmail.com', password='1234')
+        # self.client.login(username='roman',email='example@gmail.com', password='1234')
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
         
-        # self.client
-        # self.client.force_authenticate(user=user)
+        # Enter data
         date = str(datetime.now())
         title = 'Unittest title test ' + date 
         text = 'Unittest text test ' + date
         self.assertEqual(Post.objects.count(), 0)
         response1 = self.client.post('/post/new/', data={'title': title, 'text': text})
 
+        # Check is was saved in the db
         self.assertEqual(Post.objects.count(), 1)
-        post = Post.objects.first()# or Post.objects.all()[0]
+        post = Post.objects.first()
         self.assertEqual(title,post.title)
         self.assertEqual(text,post.text)
 
-        
+        # Check got the right redirect
         self.assertEqual(response1.status_code,302)
         self.assertEqual(response1['location'],'/post/1/')
 
+        # Content is displayed
         response2 = self.client.get(response1['location'])
         self.assertIn(title, response2.content.decode())
         self.assertIn(text, response2.content.decode())
 
+        # Content is added to the main page
         response3 = self.client.get('/')
         self.assertIn(title, response3.content.decode())
         self.assertIn(text, response3.content.decode())
-
 
 
 class PostModelTest(TestCase):
 
     def test_saving_and_retrieving_times(self):
 
+        # Create temp user
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         me = User.objects.get(username='roman')
+
+
         self.assertEqual(Post.objects.all().count(), 0)
 
+        # First post
         Post.objects.create(author=me,title='Sample unit test title', text='Test')
-
         self.assertEqual(Post.objects.all().count(), 1)
 
+        # Second post
         Post.objects.create(author=me,title='Sample unit test title2', text='Test2')
-
         self.assertEqual(Post.objects.all().count(), 2)
 
+        # Verify first and second post
         saved = Post.objects.all()
         self.assertEqual(saved[0].title, 'Sample unit test title')
         self.assertEqual(saved[0].text, 'Test')
@@ -82,9 +88,43 @@ class PostModelTest(TestCase):
         self.assertEqual(saved[1].title, 'Sample unit test title2')
         self.assertEqual(saved[1].text, 'Test2')
 
+#################### CV ####################
+
+## Test Data
+# CV
+name = 'Roman Podkovyrin'
+personal_statement = "Hello, please hire me"
+skills = 'Java, Python, Russian'
+phone = "00000000"
+email = "email@example.com"
 
 
+name2 = 'Roman Podkovyrin2'
+personal_statement2 = "Hello, please hire me2"
+skills2 = 'Java, Python, Russian2'
+phone2 = "000000002"
+email2 = "email@example.com2"
 
+# Work Experience
+company = "Google"
+description = "It was good"
+duration = "03/19-04/20"
+
+# Education
+school = "RRS"
+grades = "AAA*"
+duration = "09/13-05/17"
+# Project
+
+
+def check_cv_data(self,modelObject,data):
+        # Checks if model object containt the right information as data
+
+        self.assertEqual(modelObject.name, data["name"])
+        self.assertEqual(modelObject.personal_statement, data["personal_statement"])
+        self.assertEqual(modelObject.phone, data["phone"])
+        self.assertEqual(modelObject.email, data["email"])
+        self.assertEqual(modelObject.skills, data["skills"])
 
 
 class CVHomePageTest(TestCase):
@@ -106,86 +146,55 @@ class CVHomePageTest(TestCase):
 
     def test_cv_edit_can_remember_POST_requests(self):
 
+        self.fail("Redo the test")
+
+        # Login
         self.client.login(username='roman',email='example@gmail.com', password='1234')
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
         
-        date = str(datetime.now())
-        name = 'Roman Podkovyrin ' + date 
-        personal_statement = 'Personal Statement ' + date
-        skills = '["Java", "Python", "Russian"]'
-        work_experience = '[{"company": "Google", "description": "It was good", "duration": 03/19-04/20}]'
-        education = '[{"school": "RRS", "grades": "AAA*", "duration": "09/13-05/17"}]'
+        # Send data
         self.assertEqual(CV.objects.count(), 0)
         response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement,
-         "skills": skills, "work_experinece": work_experience, "education": education, "phone": "00000000",
-          "email": "email@example.com"})
+         "skills": skills, "email": email, "phone": phone})
 
+        # Check data was saved into the database
         self.assertEqual(CV.objects.count(),1)
         savedCV= CV.objects.first()
-        self.assertEqual(savedCV.name, name)
-        self.assertEqual(savedCV.statement, personal_statement)
-        self.assertEqual(savedCV.phone, "0000000")
-        self.assertEqual(savedCV.email, "email@mail.com")
-        self.assertEqual(savedCV.work, work_experience)
-        self.assertEqual(savedCV.education, education)
-        self.assertEqual(savedCV.skills, skills)
-
+        check_cv_data(self, savedCV, {'name': name, 'personal_statement': personal_statement,"skills": skills, "email": email, "phone": phone})
+        
+        # Check was redirected to the right page
         self.assertEqual(response1.status_code,302)
         self.assertEqual(response1['location'],'/cv/')
 
+        # Check information added is displayed on the page
         response2 = self.client.get(response1['location'])
         self.assertIn(name, response2.content.decode())
-        self.assertIn("0000000", response2.content.decode())
-        self.assertIn("email@mail.com", response2.content.decode())
-        self.assertIn(work_experience, response2.content.decode())
-        self.assertIn(education, response2.content.decode())
+        self.assertIn(personal_statement, response2.content.decode())
+        self.assertIn(phone, response2.content.decode())
+        self.assertIn(email, response2.content.decode())
         self.assertIn(skills, response2.content.decode())
 
 class CVModelTest (TestCase):
 
     def test_saving_and_retrieving_times(self):
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
 
-        # user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
-        # me = User.objects.get(username='roman')
+        # Add data to the model
         self.assertEqual(CV.objects.all().count(), 0)
+        CV.objects.create(author=me, name=name, personal_statement=personal_statement, skills=skills,phone=phone,email=email)
 
-        skills = '["Java", "Python", "Russian"]'
-        work_experience = '[{"company": "Google", "description": "It was good", "duration": 03/19-04/20}]'
-        education = '[{"school": "RRS", "grades": "AAA*", "duration": "09/13-05/17"}]'
-
-        CV.objects.create(name="Roman Podkovyrin", personal_statement="Hello, please hire me",
-        skills=skills, work_experience=work_experience,education=education,phone="0000000",email="email@mail.com")
-
+        # Check data is saved
         self.assertEqual(CV.objects.all().count(), 1)
-
         savedCV= CV.objects.first()
-        self.assertEqual(savedCV.name, "Roman Podkovyrin")
-        self.assertEqual(savedCV.personal_statement, "Hello, please hire me")
-        self.assertEqual(savedCV.phone, "0000000")
-        self.assertEqual(savedCV.email, "email@mail.com")
-
-        self.assertEqual(savedCV.work_experience, work_experience)
-
-        self.assertEqual(savedCV.education, education)
-        self.assertEqual(savedCV.skills, skills)
-
-
-        skills2 = '["Java2", "python2","russian2"]'
-        work_experience2 = '[{"company": "Google2", "description": "It was good2", "duration": 03/19-04/202}]'
-        education2 = '[{"school": "RRS2", "grades": "AAA*2", "duration": "09/13-05/172"}]'
-        CV.objects.all().update(name="Roman Podkovyrin2", personal_statement="Hello, please hire me2",
-        skills=skills2, work_experience=work_experience2,education=education2,phone="00000002",email="email@mail.com2")
-
+        check_cv_data(self,savedCV, {'name': name, 'personal_statement': personal_statement,"skills": skills, "email": email, "phone": phone})
+        
+        # Update model
+        CV.objects.all().update(name=name2, personal_statement=personal_statement2, skills=skills2,phone=phone2,email=email2)
         self.assertEqual(CV.objects.all().count(), 1)
 
+        # Check data was updated
         savedCV2 = CV.objects.first()
-        self.assertEqual(savedCV2.name, "Roman Podkovyrin2")
-        self.assertEqual(savedCV2.personal_statement, "Hello, please hire me2")
-        self.assertEqual(savedCV2.phone, "00000002")
-        self.assertEqual(savedCV2.email, "email@mail.com2")
-
-        self.assertEqual(savedCV2.work_experience, work_experience2)
-
-        self.assertEqual(savedCV2.education, education2)
-        self.assertEqual(savedCV2.skills, skills2)
+        check_cv_data(self,savedCV2, {'name': name2, 'personal_statement': personal_statement2,"skills": skills2, "email": email2, "phone": phone2})
+        
