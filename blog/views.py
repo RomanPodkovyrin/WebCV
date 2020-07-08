@@ -77,3 +77,6 @@ def cv_edit(request):
     else:
         form = CVForm(instance=cv)
     return render(request, 'blog/cv_edit.html', {'form': form})
+
+def cv_work(request):
+    return render(request, 'blog/work_list.html', {})
