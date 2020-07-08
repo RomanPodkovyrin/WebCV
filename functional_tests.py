@@ -40,7 +40,7 @@ class NewBlogVisitorTest(unittest.TestCase):
             pass
 
     
-    def test_cannont_add_new_post_with_url(self):
+    def test_cannot_add_new_post_with_url(self):
         self.browser.get("http://localhost:8000/post/new/")
         self.assertIn('Page not found', self.browser.title)
 
@@ -122,11 +122,11 @@ class AdminBlogControlTest(unittest.TestCase):
             "New Post did not appear in the blog"
         )
 
-
+########## CV ##########
 
 class NewCVVisitorTest(unittest.TestCase):
 
-    # James in an employer, who want's too look at roman's cv
+    # James is an employer, who want's too look at roman's cv
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
@@ -152,14 +152,14 @@ class NewCVVisitorTest(unittest.TestCase):
         )
 
 
-        # James can see the correct cv template
-       
+        # James can see the correct cv items
         page_source = self.browser.page_source
         for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_phone', 'id_email']:
             self.assertIn(item, page_source)
 
         
     def test_visitor_cannot_edit_cv_with_button(self):
+
         # James tries to edit the cv
         self.browser.get('http://localhost:8000/cv')
         
@@ -169,6 +169,7 @@ class NewCVVisitorTest(unittest.TestCase):
             edit_cv = self.browser.find_element_by_id("id_edit_cv_button")
         except:
             edit_cv = None
+
         # But there is no button 
         self.assertIsNone(edit_cv)
         
@@ -186,8 +187,9 @@ class NewCVVisitorTest(unittest.TestCase):
 
     def test_visitor_cannot_edit_cv_with_url(self):
 
-        # So now he tries to go to the url diriectly  
+        # James tries to go to the url directly to edit cv
         self.browser.get('http://localhost:8000/cv/edit')
+
         # But that does not work
         self.assertIn('Page not found', self.browser.title)
 
@@ -196,14 +198,14 @@ class AdminCVTests(unittest.TestCase):
     # Roman is the administrator
 
     def setUp(self):
-        # He login as an administrator
+        # He logins as an administrator
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
         # He go to the website
         self.browser.get('http://localhost:8000/admin')
 
-        
+        # Enters his credentials
         username = self.browser.find_element_by_id('id_username')
         password = self.browser.find_element_by_id('id_password')
 
@@ -218,10 +220,11 @@ class AdminCVTests(unittest.TestCase):
         self.browser.quit()
 
     def test_can_edit_cv(self):
+
         # Roman goes to cv url
         self.browser.get('http://localhost:8000/cv/')
 
-        # He click edit button
+        # He clicks edit button
         edit_cv = self.browser.find_element_by_id("id_edit_cv_button")
         edit_cv.click()
         time.sleep(1)
@@ -239,31 +242,19 @@ class AdminCVTests(unittest.TestCase):
         personal_statement_text = 'Roman ' + current_date_and_time
         personal_statement.send_keys(personal_statement_text)
 
-        # adds skills 3 defaults
-        skills = self.browser.find_elements_by_id('id_skills')
-        self.assertEqual(len(skills), 3)
-         # Add more skills button
-        add_skills = self.browser.find_element_by_id('id_add_skills_button')
-        add_skills.click()
-        skills = self.browser.find_elements_by_id('id_skills')
-        self.assertEqual(len(skills), 4)
+        # adds skills
+        skills = self.browser.find_element_by_id('id_skills')
+        skills_text = 'Java, Python ' + current_date_and_time
 
-        for i in range(len(skills)):
-            skills[i].send_keys((i + 1) + " " + current_date_and_time)
+        # add phone
+        phone = self.browser.find_element_by_id('id_phone')
+        phone_text = '0000000 ' + current_date_and_time
 
+        # add email
+        email = self.browser.find_element_by_id('id_email')
+        email_text = 'example@email.com '+ current_date_and_time
 
-        # adds work experience 1 default
-        work = self.browser.find_elements_by_id('id_work_experience')
-        self.assertEqual(len(work), 1)
-        add_work = self.browser.find_element_by_id('id_add_skills_button')
-        add_skills.click()
-        # adds education 1 default
-        'id_education'
-
-        # adds contacts (email and phone number)
-        'id_contacts'
-        # submits
-
+        # Saved his edits
         save_button = self.browser.find_element_by_id("id_save_button")
         save_button.click()
 
@@ -274,19 +265,16 @@ class AdminCVTests(unittest.TestCase):
 
         # name
         self.assertEqual(self.browser.find_element_by_id("id_name").text,nametext)
-
-        
         # personal statement
         self.assertEqual(self.browser.find_element_by_id("id_personal_statement").text,personal_statement_text)
-
         # skills
+        self.assertEqual(self.browser.find_element_by_id("id_skills").text,skills_text)
+        # phone
+        self.assertEqual(self.browser.find_element_by_id("id_phone").text,phone_text)
+        # email
+        self.assertEqual(self.browser.find_element_by_id("id_email").text,email_text)
 
-        # work experience
-
-        # education
-
-        contacts
-        self.fail("Finish")
+        
 
 
 
