@@ -235,29 +235,38 @@ class AdminCVTests(unittest.TestCase):
         # Adds his name
         name = self.browser.find_element_by_id('id_name')
         nametext = 'Roman ' + current_date_and_time
+        name.clear()
         name.send_keys(nametext)
 
         # adds his personal statement
         personal_statement = self.browser.find_element_by_id('id_personal_statement')
         personal_statement_text = 'Roman ' + current_date_and_time
+        personal_statement.clear()
         personal_statement.send_keys(personal_statement_text)
 
         # adds skills
         skills = self.browser.find_element_by_id('id_skills')
         skills_text = 'Java, Python ' + current_date_and_time
+        skills.clear()
+        skills.send_keys(skills_text)
 
         # add phone
         phone = self.browser.find_element_by_id('id_phone')
         phone_text = '0000000 ' + current_date_and_time
+        phone.clear()
+        phone.send_keys(phone_text)
 
         # add email
         email = self.browser.find_element_by_id('id_email')
         email_text = 'example@email.com '+ current_date_and_time
+        email.clear()
+        email.send_keys(email_text)
 
         # Saved his edits
         save_button = self.browser.find_element_by_id("id_save_button")
         save_button.click()
 
+        time.sleep(3)
         # gets redirected
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
 

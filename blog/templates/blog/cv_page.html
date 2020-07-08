@@ -14,25 +14,24 @@
 		
 		<div id="id_name">
 			<h1>{{ cv.name }}</h1>
-			<h2>Job Title</h2>
 		</div>
 		
 		<div id="id_contacts">
 			<ul>
-				<li id="id_email">email: <a>{{ cv.email }}</a></li>
-				<li id="id_phone">m: {{ cv.phone }}</li>
+				<li >email: <a id="id_email">{{ cv.email }}</a></li>
+				<li >m: <a id="id_phone">{{ cv.phone }}</a></li>
 			</ul>
 		</div>
 	</div>
 	
-	<div id="id_personal_statement">
+	<div >
 		<section>
 			<article>
 				<div>
 					<h1>Personal Profile</h1>
 				</div>
 				
-				<div>
+				<div id="id_personal_statement">
 					<p>{{ cv.personal_statement }}</p>
 				</div>
 			</article>
@@ -76,13 +75,6 @@
 		<div">
 			<ul id="id_skills">
 				<li>{{ cv.skills }}</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
-				<li>A Key Skill</li>
 			</ul>
 		</div>
 	</section>
