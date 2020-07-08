@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone # for queryset filter
-from .models import Post # include the model written previously
-from .forms import PostForm
+from .models import Post, CV # include the model written previously
+from .forms import PostForm, CVForm
 
 # Create your views here.
 def post_list(request):
@@ -47,7 +47,24 @@ def post_edit(request, pk):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 def cv_page(request):
-    return render(request, 'blog/cv_page.html', {})
+    cv = CV.objects.first()
+    # if (cv is None):
+    #     cv = CV.objects.create(author=request.user)
+
+    return render(request, 'blog/cv_page.html', {"cv": cv})
 
 def cv_edit(request):
-    return render(request, 'blog/cv_edit.html', {})
+    # cv = get_object_or_404(CV)
+    cv = CV.objects.first()
+    if (cv is None):
+        cv = CV.objects.create(author=request.user)
+    if request.method == "POST":
+        form = CVForm(request.POST, instance=cv)
+        if form.is_valid():
+            cv = form.save(commit=False)
+            cv.author = request.user
+            cv.save()
+            return redirect('cv_page')
+    else:
+        form = CVForm(instance=cv)
+    return render(request, 'blog/cv_edit.html', {'form': form})

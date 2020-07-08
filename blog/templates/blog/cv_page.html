@@ -13,14 +13,14 @@
 		</div>
 		
 		<div id="id_name">
-			<h1>Roman Podkovyrin</h1>
+			<h1>{{ cv.name }}</h1>
 			<h2>Job Title</h2>
 		</div>
 		
 		<div id="id_contacts">
 			<ul>
-				<li id="id_email">email: <a href="mailto:joe@bloggs.com" target="_blank">joe@bloggs.com</a></li>
-				<li id="id_phone">m: 01234567890</li>
+				<li id="id_email">email: <a>{{ cv.email }}</a></li>
+				<li id="id_phone">m: {{ cv.phone }}</li>
 			</ul>
 		</div>
 	</div>
@@ -33,7 +33,7 @@
 				</div>
 				
 				<div>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dolor metus, interdum at scelerisque in, porta at lacus. Maecenas dapibus luctus cursus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies massa et erat luctus hendrerit. Curabitur non consequat enim. Vestibulum bibendum mattis dignissim. Proin id sapien quis libero interdum porttitor.</p>
+					<p>{{ cv.personal_statement }}</p>
 				</div>
 			</article>
 		</section>
@@ -75,7 +75,7 @@
 		
 		<div">
 			<ul id="id_skills">
-				<li>A Key Skill</li>
+				<li>{{ cv.skills }}</li>
 				<li>A Key Skill</li>
 				<li>A Key Skill</li>
 				<li>A Key Skill</li>
