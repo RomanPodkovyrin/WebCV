@@ -24,6 +24,9 @@ class BlogHomePageTest(TestCase):
         self.assertTemplateUsed(response, 'blog/post_list.html')
 
     def test_post_edit_returns_correct_html_template_for_new_post(self):
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+        
         response = self.client.get('/post/new/')
         self.assertTemplateUsed(response, 'blog/post_edit.html')
     
