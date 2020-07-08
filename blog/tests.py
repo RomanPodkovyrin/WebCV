@@ -26,7 +26,7 @@ class BlogHomePageTest(TestCase):
     def test_post_edit_returns_correct_html_template_for_new_post(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
-        
+
         response = self.client.get('/post/new/')
         self.assertTemplateUsed(response, 'blog/post_edit.html')
     
@@ -62,6 +62,10 @@ class BlogHomePageTest(TestCase):
         response3 = self.client.get('/')
         self.assertIn(title, response3.content.decode())
         self.assertIn(text, response3.content.decode())
+
+    def test_cv_work_list_returns_correct_html_template(self):
+        response = self.client.get('/cv/work/')
+        self.assertTemplateUsed(response, 'blog/work_list.html')
 
 
 class PostModelTest(TestCase):

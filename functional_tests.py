@@ -222,6 +222,7 @@ class NewCVVisitorTest(unittest.TestCase):
             self.assertIn(item, page_source)
         
         self.fail("Check if work/edit page")
+    
 
 
 
