@@ -140,6 +140,9 @@ class CVHomePageTest(TestCase):
         self.assertTemplateUsed(response,'blog/cv_page.html')
 
     def test_cv_edit_returns_correct_html_template(self):
+        # Login
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
 
         response = self.client.get('/cv/edit/')
         self.assertTemplateUsed(response,'blog/cv_edit.html')
@@ -152,7 +155,7 @@ class CVHomePageTest(TestCase):
         
         # Send data
         self.assertEqual(CV.objects.count(), 0)
-        response1 = self.client.post('/post/new/', data={'name': name, 'personal_statement': personal_statement,
+        response1 = self.client.post('/cv/edit/', data={'name': name, 'personal_statement': personal_statement,
          "skills": skills, "email": email, "phone": phone})
 
         # data was saved into the database
