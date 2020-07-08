@@ -13,6 +13,9 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post})
 
 def post_new(request):
+    if not request.user.is_authenticated:
+        return redirect('post_list')
+
     # print('hello')
     if request.method == "POST":# Accessing page for the first time an we want a blank form
         # print('Post')
@@ -32,6 +35,9 @@ def post_new(request):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 def post_edit(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('post_list')
+
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         
@@ -54,6 +60,9 @@ def cv_page(request):
     return render(request, 'blog/cv_page.html', {"cv": cv})
 
 def cv_edit(request):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
     # cv = get_object_or_404(CV)
     cv = CV.objects.first()
     # if (cv is None):
