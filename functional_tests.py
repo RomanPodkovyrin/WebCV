@@ -42,7 +42,7 @@ class NewBlogVisitorTest(unittest.TestCase):
     
     def test_cannot_add_new_post_with_url(self):
         self.browser.get("http://localhost:8000/post/new/")
-        self.assertIn('Page not found', self.browser.title)
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/")
 
     def test_cannot_edit_post_with_button(self):
 
@@ -58,7 +58,7 @@ class NewBlogVisitorTest(unittest.TestCase):
 
     def test_cannot_edit_post_with_url(self):
         self.browser.get("http://localhost:8000/post/new/")
-        self.assertIn('Page not found', self.browser.title)
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/")
 
 
 
@@ -191,7 +191,7 @@ class NewCVVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000/cv/edit')
 
         # But that does not work
-        self.assertIn('Page not found', self.browser.title)
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/")
 
 
 class AdminCVTests(unittest.TestCase):
