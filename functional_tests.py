@@ -154,7 +154,7 @@ class NewCVVisitorTest(unittest.TestCase):
 
         # James can see the correct cv items
         page_source = self.browser.page_source
-        for item in ['id_name','id_personal_statement','id_education','id_work_experience','id_skills', 'id_phone', 'id_email']:
+        for item in ['id_name','id_personal_statement','id_skills', 'id_phone', 'id_email']:
             self.assertIn(item, page_source)
 
         
@@ -192,6 +192,38 @@ class NewCVVisitorTest(unittest.TestCase):
 
         # But that does not work
         self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/")
+
+    def test_can_see_work_experience(self):
+        # James loads the website
+        self.browser.get('http://localhost:8000/')
+
+        # James clicks the "CV" in the menu option
+        cv_button = self.browser.find_element_by_id('id_cv_link_button')
+        cv_button.click()
+
+        # Clicks on the work experience title
+        work_experience_title = self.browser.find_element_by_id('id_work_experience_title')
+        work_experience_title.click()
+
+        # james is redirected to a work experinece list
+        self.assertEqual(self.browser.current_url, 'http://localhost:8000/cv/work/', "wasn't redirected to a cv url")
+        self.assertIn('WebCV', self.browser.title)
+        headers = self.browser.find_elements_by_tag_name('h1')
+        self.assertTrue(
+            any('CV' in header.text for header in headers),
+            "Did't find CV in header"
+        )
+
+        self.fail("Need to make sure it's not empty")
+
+        # James can see the correct work items
+        page_source = self.browser.page_source
+        for item in ['id_company', 'id_job_title', 'id_description', 'id_from','id_to']:
+            self.assertIn(item, page_source)
+        
+        self.fail("Check if work/edit page")
+
+
 
 
 class AdminCVTests(unittest.TestCase):
