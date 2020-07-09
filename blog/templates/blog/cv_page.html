@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base_cv.html' %}
 
 <!-- {% block title %}help{% endblock %} -->
 
@@ -39,10 +39,10 @@
 	</div>
 
 
-	<div id="id_work_experience">	
+	<div>	
 		<section>
 			<div >
-				<h1>Work Experience</h1>
+				<h1><a id="id_work_experience_title" href="{% url 'work_list' %}">Work Experience</a></h1>
 			</div>
 			
 			<div>

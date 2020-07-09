@@ -1,0 +1,7 @@
+{% extends 'blog/base.html' %}
+
+{% block header %}
+    {% if user.is_authenticated %}
+            <a href="{% url 'work_add' %}" id="add_new_work" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+    {% endif %} 
+{% endblock %}

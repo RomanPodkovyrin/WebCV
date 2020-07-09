@@ -63,9 +63,16 @@ class BlogHomePageTest(TestCase):
         self.assertIn(title, response3.content.decode())
         self.assertIn(text, response3.content.decode())
 
-    def test_cv_work_list_returns_correct_html_template(self):
+    def test_work_list_returns_correct_html_template(self):
         response = self.client.get('/cv/work/')
         self.assertTemplateUsed(response, 'blog/work_list.html')
+
+    def test_work_add_returns_correct_html_template(self):
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+
+        response = self.client.get('/cv/work/add/')
+        self.assertTemplateUsed(response, 'blog/work_edit.html')
 
 
 class PostModelTest(TestCase):

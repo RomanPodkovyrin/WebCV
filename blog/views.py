@@ -78,5 +78,10 @@ def cv_edit(request):
         form = CVForm(instance=cv)
     return render(request, 'blog/cv_edit.html', {'form': form})
 
-def cv_work(request):
+def work_list(request):
     return render(request, 'blog/work_list.html', {})
+
+def work_add(request):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+    return render(request, 'blog/work_edit.html', {})
