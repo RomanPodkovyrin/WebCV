@@ -156,8 +156,7 @@ class NewCVVisitorTest(unittest.TestCase):
         page_source = self.browser.page_source
         for item in ['id_name','id_personal_statement','id_skills', 'id_phone', 'id_email']:
             self.assertIn(item, page_source)
-
-        
+     
     def test_visitor_cannot_edit_cv_with_button(self):
 
         # James tries to edit the cv
@@ -216,7 +215,16 @@ class NewCVVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000/cv/work/edit/1')
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
+    def test_visitor_cannot_add_education_with_url(self):
+        self.browser.get('http://localhost:8000/cv/education/add')
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
+    
+    def test_can_see_education(self):
+        self.fail("Finish")
 
+    def test_visitor_cannont_edit_education_with_url(self):
+        self.browser.get('http://localhost:8000/cv/education/edit/1')
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
 
 class AdminCVTests(unittest.TestCase):
@@ -366,7 +374,6 @@ class AdminCVTests(unittest.TestCase):
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
                 self.assertIn(x in work_item.text)
 
-
     def test_can_edit_work(self):
         self.browser.get("http://localhost:8000/cv/")
         work = self.browser.find_elements_by_id("work_edit_button")
@@ -422,7 +429,92 @@ class AdminCVTests(unittest.TestCase):
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
                 self.assertIn(x in work_item.text)
 
+    def test_can_add_education(self):
+        self.browser.get("http://localhost:8000/cv/")
 
+        new_education = self.browser.find_element_by_id("add_education")
+        new_education.click()
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/education/add/")
+
+        dateandtime = str(datetime.now())
+
+        school = self.browser.find_element_by_id("id_school")
+        school_text = "Google " + dateandtime
+        school.send_keys(school_text)
+
+        grade = self.browser.find_element_by_id("id_grade")
+        grade_text = "Sold users data, just for fun " + dateandtime
+        grade.send_keys(grade_text)
+
+        date_from = self.browser.find_element_by_id("id_start")
+        date_from_text ="1. " + dateandtime
+        date_from.send_keys(date_from_text)
+
+        date_to = self.browser.find_element_by_id("id_finish")
+        date_to_text = "2. " + dateandtime
+        date_to.send_keys(date_to_text)
+
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        education_list_table = self.browser.find_elements_by_class_name("education")
+
+        for education_item in education_list_table:
+            for x in [school_text, grade_text, date_from_text, date_to_text]:
+                self.assertIn(x in education_item.text)
+    
+    def test_can_edit_education(self):
+        self.browser.get("http://localhost:8000/cv/")
+        work = self.browser.find_elements_by_id("education_edit_button")
+        work[0].click()
+
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/education/edit/1/")
+
+        dateandtime = str(datetime.now())
+
+        school = self.browser.find_element_by_id("id_school")
+        school_text = "Google " + dateandtime
+        school.clear()
+        school.send_keys(school_text)
+
+        grade = self.browser.find_element_by_id("id_grade")
+        grade_text = "Sold users data, just for fun " + dateandtime
+        grade.clear()
+        grade.send_keys(grade_text)
+
+        date_from = self.browser.find_element_by_id("id_start")
+        date_from_text ="1. " + dateandtime
+        date_from.clear()
+        date_from.send_keys(date_from_text)
+
+        date_to = self.browser.find_element_by_id("id_finish")
+        date_to_text = "2. " + dateandtime
+        date_to.clear()
+        date_to.send_keys(date_to_text)
+
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        education_list_table = self.browser.find_elements_by_class_name("education")
+        # works = work_list_table.find_elements_by_id("id_work")
+        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
+        #     self.assertIn(tag, work_list_table.text)
+
+        self.assertEqual(self.browser.find_element_by_id("id_school").text,school_text)
+        self.assertEqual(self.browser.find_element_by_id("id_grade").text,grade_text)
+        self.assertEqual(self.browser.find_element_by_id("id_start").text,date_from_text)
+        self.assertEqual(self.browser.find_element_by_id("id_finish").text,date_to_text)
+
+        for education_item in education_list_table:
+            for x in [school_text, grade_text, date_from_text, date_to_text]:
+                self.assertIn(x in education_item.text)
+        self.fail("Finish")
 
 
 

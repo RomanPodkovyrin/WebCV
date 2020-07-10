@@ -108,11 +108,6 @@ phone2 = "000000002"
 email2 = "email@example.com2"
 
 
-
-# Education
-school = "RRS"
-grades = "AAA*"
-duration = "09/13-05/17"
 # Project
 
 
@@ -299,10 +294,6 @@ class CVWorkTest (TestCase):
         self.assertIn(description2, response2.content.decode())
         self.assertIn(start2, response2.content.decode())
         self.assertIn(finish2, response2.content.decode())
-
-
-        
-
         
 
 class CVWorkModelTest(TestCase):
@@ -331,3 +322,57 @@ class CVWorkModelTest(TestCase):
         savedWork= Work.objects.all()[1]
         check_work_data(self,savedWork, {'company':company2, 'job_title':job_title2,  'description':description2, 'start':start2, 'finish':finish2})
 
+
+# Education
+school = "RRS"
+grades = "AAA*"
+duration = "09/13-05/17"
+
+def check_education_data(self,modelObject,data):
+        self.fail("Finish")
+        # Checks if model object containt the right information as data
+
+        self.assertEqual(modelObject.company, data["company"])
+        self.assertEqual(modelObject.job_title, data["job_title"])
+        self.assertEqual(modelObject.description, data["description"])
+        self.assertEqual(modelObject.start, data["start"])
+        self.assertEqual(modelObject.finish, data["finish"])
+
+class CVEducationTest(TestCase):
+    def test_education_add_returns_correct_html_template(self):
+        self.fail("Finish")
+    
+    def test_education_add_can_remember_POST_request(self):
+        self.fail("Finish")
+    
+    def test_education_edit_returns_correct_html_response(self):
+        self.fail("Finish")
+
+    def test_education_edit_can_remember_POST_request(self):
+        self.fail("Finish")
+
+class CVEducationTest(TestCase):
+
+    def test_saving_and_retrieving_times(self):
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        # Add data to the model
+        self.assertEqual(Education.objects.all().count(), 0)
+
+        Education.objects.create(author=me, school=school, grade=grade, start=start, finish=finish )
+
+        # Check data is saved
+        self.assertEqual(Education.objects.all().count(), 1)
+        savedWEducation= Education.objects.first()
+        check_education_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
+        
+        # add Second work
+        Education.objects.create(author=me, school=school2, grade=grade2, start=start2, finish=finish2 )
+
+        # Check data is saved
+        self.assertEqual(Education.objects.all().count(), 2)
+        savedEducation= Education.objects.first()
+        check_work_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
+        savedEducation= Education.objects.all()[1]
+        check_work_data(self,savedEducation, {'school':school2,  'grade':grade2, 'start':start2, 'finish':finish2})
