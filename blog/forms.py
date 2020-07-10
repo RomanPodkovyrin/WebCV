@@ -1,6 +1,5 @@
 from django import forms
-from .models import Post
-from .models import CV
+from .models import Post, CV, Work
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -11,3 +10,8 @@ class CVForm(forms.ModelForm):
     class Meta:
         model = CV
         fields = ('name', 'personal_statement', 'skills', 'phone', 'email' ,)
+
+class WorkForm(forms.ModelForm):
+    class Meta:
+        model = Work
+        fields = ('company', 'job_title', 'description', 'start', 'finish',)

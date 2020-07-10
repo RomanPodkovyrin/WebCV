@@ -197,6 +197,7 @@ class NewCVVisitorTest(unittest.TestCase):
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
     def test_can_see_work_experience(self):
+
         # James loads the website
         self.browser.get('http://localhost:8000/')
 
@@ -204,31 +205,16 @@ class NewCVVisitorTest(unittest.TestCase):
         cv_button = self.browser.find_element_by_id('id_cv_link_button')
         cv_button.click()
 
-        # Clicks on the work experience title
-        work_experience_title = self.browser.find_element_by_id('id_work_experience_title')
-        work_experience_title.click()
-
-        # james is redirected to a work experinece list
-        self.assertEqual(self.browser.current_url, 'http://localhost:8000/cv/work/', "wasn't redirected to a work url")
-        self.assertIn('WebCV', self.browser.title)
-        headers = self.browser.find_elements_by_tag_name('h1')
-        self.assertTrue(
-            any('CV' in header.text for header in headers),
-            "Did't find CV in header"
-        )
-
         # James can see the correct work items
         work_id = self.browser.find_elements_by_id('id_work')
         self.assertGreater(len(work_id), 0, "There are no work posts")
         for work in work_id:
-            print("Work ", work.text)
-            for item in ['id_company', 'id_job_title', 'id_description', 'id_from','id_to']:
-                self.assertIn(item, work.text)
+            for item in ['id_company', 'id_job_title', 'id_description', 'id_start','id_finish']:
+                work.find_element_by_id(item)
 
- 
-        
-        self.fail("Check if work/edit page")
-    
+    def test_visitor_cannot_edit_work_with_url(self):
+        self.browser.get('http://localhost:8000/cv/work/edit/1')
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
 
 
@@ -322,21 +308,6 @@ class AdminCVTests(unittest.TestCase):
         # email
         self.assertEqual(self.browser.find_element_by_id("id_email").text,email_text)
 
-    def test_work_has_no_new_post_button(self):
-        self.fail("DElete")
-        self.browser.get('http://localhost:8000/cv/work/')
-
-        try:
-            newPost = self.browser.find_element_by_id("add_new_post")
-            newPost.click()
-            
-        except:
-            return
-
-        self.fail("There should be no add new post button")
-        # time.sleep(2)
-        # self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/work/", "there should be no new post button")
-     
     def test_cv_has_no_new_post_button(self):
         self.browser.get('http://localhost:8000/cv/')
 
@@ -358,7 +329,7 @@ class AdminCVTests(unittest.TestCase):
         new_work.click()
         self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/work/add/")
 
-        dateandtime = datetime.now()
+        dateandtime = str(datetime.now())
 
         company = self.browser.find_element_by_id("id_company")
         company_text = "Google " + dateandtime
@@ -372,21 +343,87 @@ class AdminCVTests(unittest.TestCase):
         description_text = "Sold users data, just for fun " + dateandtime
         description.send_keys(description_text)
 
-        date_from = self.browser.find_element_by_id("id_from")
+        date_from = self.browser.find_element_by_id("id_start")
         date_from_text ="1. " + dateandtime
         date_from.send_keys(date_from_text)
 
-        date_to = self.browser.find_element_by_id("id_to")
+        date_to = self.browser.find_element_by_id("id_finish")
         date_to_text = "2. " + dateandtime
         date_to.send_keys(date_to_text)
 
-        work_list_table = self.browser.find_element_by_id("id_work_list_table")
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        work_list_table = self.browser.find_elements_by_class_name("work")
         # works = work_list_table.find_elements_by_id("id_work")
-        for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
-            self.assertIn(tag, work_list_table.text)
+        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
+        #     self.assertIn(tag, work_list_table.text)
+
+        for work_item in work_list_table:
+            for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
+                self.assertIn(x in work_item.text)
+
 
     def test_can_edit_work(self):
-        self.fail("Finish")
+        self.browser.get("http://localhost:8000/cv/")
+        work = self.browser.find_elements_by_id("work_edit_button")
+        work[0].click()
+
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/work/edit/1/")
+
+        dateandtime = str(datetime.now())
+
+        company = self.browser.find_element_by_id("id_company")
+        company_text = "Google " + dateandtime
+        company.clear()
+        company.send_keys(company_text)
+
+        job = self.browser.find_element_by_id("id_job_title")
+        job_text = "CEO " + dateandtime
+        job.clear()
+        job.send_keys(job_text)
+
+        description = self.browser.find_element_by_id("id_description")
+        description_text = "Sold users data, just for fun " + dateandtime
+        description.clear()
+        description.send_keys(description_text)
+
+        date_from = self.browser.find_element_by_id("id_start")
+        date_from_text ="1. " + dateandtime
+        date_from.clear()
+        date_from.send_keys(date_from_text)
+
+        date_to = self.browser.find_element_by_id("id_finish")
+        date_to_text = "2. " + dateandtime
+        date_to.clear()
+        date_to.send_keys(date_to_text)
+
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        work_list_table = self.browser.find_elements_by_class_name("work")
+        # works = work_list_table.find_elements_by_id("id_work")
+        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
+        #     self.assertIn(tag, work_list_table.text)
+
+        self.assertEqual(self.browser.find_element_by_id("id_company").text,company_text)
+        self.assertEqual(self.browser.find_element_by_id("id_job_title").text,job_text)
+        self.assertEqual(self.browser.find_element_by_id("id_description").text,description_text)
+        self.assertEqual(self.browser.find_element_by_id("id_start").text,date_from_text)
+        self.assertEqual(self.browser.find_element_by_id("id_finish").text,date_to_text)
+
+        for work_item in work_list_table:
+            for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
+                self.assertIn(x in work_item.text)
+
+
+
 
 
 

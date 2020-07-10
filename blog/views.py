@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone # for queryset filter
-from .models import Post, CV # include the model written previously
-from .forms import PostForm, CVForm
+from .models import Post, CV, Work # include the model written previously
+from .forms import PostForm, CVForm, WorkForm
 
 # Create your views here.
 def post_list(request):
@@ -16,17 +16,12 @@ def post_new(request):
     if not request.user.is_authenticated:
         return redirect('post_list')
 
-    # print('hello')
     if request.method == "POST":# Accessing page for the first time an we want a blank form
-        # print('Post')
         form = PostForm(request.POST)
         if form.is_valid():# Checking if the form is correct
-            # print('Valid')
             # Saving it
             post = form.save(commit=False)# false means we don't want to save the post model yet
-            # print(post.pk)
             post.author = request.user
-            # print('User', post.author)
             post.published_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)# redirects us to the new post
@@ -54,10 +49,11 @@ def post_edit(request, pk):
 
 def cv_page(request):
     cv = CV.objects.first()
+    works = Work.objects.all()
     # if (cv is None):
     #     cv = CV.objects.create(author=request.user)
 
-    return render(request, 'blog/cv_page.html', {"cv": cv})
+    return render(request, 'blog/cv_page.html', {"cv": cv, "works": works})
 
 def cv_edit(request):
     if not request.user.is_authenticated:
@@ -78,10 +74,35 @@ def cv_edit(request):
         form = CVForm(instance=cv)
     return render(request, 'blog/cv_edit.html', {'form': form})
 
-def work_list(request):
-    return render(request, 'blog/work_list.html', {})
-
 def work_add(request):
     if not request.user.is_authenticated:
         return redirect('cv_page')
-    return render(request, 'blog/work_edit.html', {})
+
+    if request.method == "POST":# Accessing page for the first time an we want a blank form
+        form = WorkForm(request.POST)
+        if form.is_valid():# Checking if the form is correct
+            # Saving it
+            work = form.save(commit=False)# false means we don't want to save the post model yet
+            work.author = request.user
+            work.save()
+            return redirect('cv_page')# redirects us to the new post
+    else:# we go back to the view with all the form data we just typed
+        form = WorkForm()
+    return render(request, 'blog/work_edit.html', {'form': form})
+
+def work_edit(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    work = get_object_or_404(Work, pk=pk)
+
+    if request.method == "POST":
+        form = WorkForm(request.POST, instance=work)
+        if form.is_valid():
+            work = form.save(commit=False)
+            work.author = request.user
+            work.save()
+            return redirect('cv_page')
+    else:
+        form = WorkForm(instance=work)
+    return render(request,'blog/work_edit.html',{'form': form})

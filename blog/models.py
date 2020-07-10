@@ -39,3 +39,17 @@ class CV(models.Model):
     def __str__(self):
         return self.name
 
+
+class Work(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    company = models.CharField(max_length=200, default='')
+    job_title = models.CharField(max_length=200, default='')
+    description = models.TextField(default='')
+    start = models.CharField(max_length=200, default='')
+    finish = models.CharField(max_length=200, default='')
+
+    def publish(self):
+        self.save()
+
+    def __str__(self):
+        return self.company
