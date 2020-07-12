@@ -106,3 +106,9 @@ def work_edit(request, pk):
     else:
         form = WorkForm(instance=work)
     return render(request,'blog/work_edit.html',{'form': form})
+
+def education_add(request):
+    return render(request,'blog/education_edit.html')
+
+def education_edit(request, pk):
+    return render(request,'blog/education_edit.html')

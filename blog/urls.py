@@ -10,5 +10,7 @@ urlpatterns = [
     path('cv/', views.cv_page, name='cv_page'),
     path('cv/edit/', views.cv_edit, name='cv_edit'),
     path('cv/work/add/', views.work_add, name='work_add'),
-    path('cv/work/edit/<int:pk>/', views.work_edit, name='work_edit')
+    path('cv/work/edit/<int:pk>/', views.work_edit, name='work_edit'),
+    path('cv/education/edit/<int:pk>/', views.education_edit, name='education_edit'),
+    path('cv/education/add/', views.education_add, name='education_add'),
 ]

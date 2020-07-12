@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 from blog.views import post_list, cv_page, post_new, cv_edit
-from blog.models import Post, CV, Work
+from blog.models import Post, CV, Work, Education
 
 
 #################### Blog ####################
@@ -325,16 +325,20 @@ class CVWorkModelTest(TestCase):
 
 # Education
 school = "RRS"
-grades = "AAA*"
-duration = "09/13-05/17"
+grade = "AAA*"
+start = "09/13"
+finish = "05/17"
+
+school2 = "RRS2"
+grade2 = "AAA*2"
+start2 = "09/132"
+finish2 = "05/172"
 
 def check_education_data(self,modelObject,data):
-        self.fail("Finish")
         # Checks if model object containt the right information as data
 
-        self.assertEqual(modelObject.company, data["company"])
-        self.assertEqual(modelObject.job_title, data["job_title"])
-        self.assertEqual(modelObject.description, data["description"])
+        self.assertEqual(modelObject.school, data["school"])
+        self.assertEqual(modelObject.grade, data["grade"])
         self.assertEqual(modelObject.start, data["start"])
         self.assertEqual(modelObject.finish, data["finish"])
 
@@ -343,22 +347,73 @@ class CVEducationTest(TestCase):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
 
-        response = self.client.get('/cv/education/add')
+        response = self.client.get('/cv/education/add/')
         self.assertTemplateUsed(response, 'blog/education_edit.html')
     
     def test_education_add_can_remember_POST_request(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        self.client.force_login(user)
+
+
+        # Send data
+        self.assertEqual(Education.objects.count(), 0)
+        response1 = self.client.post('/cv/education/add/', data={'school':school, 'grade':grade, 'start':start, 'finish':finish})
+
+        # data was saved into the database
+        self.assertEqual(Education.objects.count(),1)
+        savedEducation= Education.objects.first()
+        check_education_data(self, savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
+        
+        # redirected to the right page
+        self.assertEqual(response1.status_code,302)
+        self.assertEqual(response1['location'],'/cv/')
+
+        # information added is displayed on the page
+        response2 = self.client.get(response1['location'])
+        self.assertIn(school, response2.content.decode())
+        self.assertIn(grade, response2.content.decode())
+        self.assertIn(start, response2.content.decode())
+        self.assertIn(finish, response2.content.decode())
     
     def test_education_edit_returns_correct_html_response(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
-        Education.objects.create(author=me, school=school, grade=grade, start=start, finish=finish )
+        Education.objects.create(author=User.objects.get(username='roman'), school=school, grade=grade, start=start, finish=finish )
 
-        response = self.client.get('/cv/education/edit/1')
+        response = self.client.get('/cv/education/edit/1/')
         self.assertTemplateUsed(response, 'blog/education_edit.html')
 
     def test_education_edit_can_remember_POST_request(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        Education.objects.create(author=me, school=school, grade=grade, start=start, finish=finish )
+
+        self.client.force_login(user)
+
+
+        # Send data
+        self.assertEqual(Education.objects.count(), 1)
+        response1 = self.client.post('/cv/education/add/', data={'school':school2, 'grade':grade2, 'start':start2, 'finish':finish2})
+
+        # data was saved into the database
+        self.assertEqual(Education.objects.count(),1)
+        savedEducation= Education.objects.first()
+        check_education_data(self, savedEducation, {'school':school2, 'grade':grade2, 'start':start2, 'finish':finish2})
+        
+        # redirected to the right page
+        self.assertEqual(response1.status_code,302)
+        self.assertEqual(response1['location'],'/cv/')
+
+        # information added is displayed on the page
+        response2 = self.client.get(response1['location'])
+        self.assertIn(school2, response2.content.decode())
+        self.assertIn(grade2, response2.content.decode())
+        self.assertIn(start2, response2.content.decode())
+        self.assertIn(finish2, response2.content.decode())
+        
 
 class CVEducationModelTest(TestCase):
 
@@ -373,7 +428,7 @@ class CVEducationModelTest(TestCase):
 
         # Check data is saved
         self.assertEqual(Education.objects.all().count(), 1)
-        savedWEducation= Education.objects.first()
+        savedEducation= Education.objects.first()
         check_education_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
         
         # add Second work
@@ -382,6 +437,6 @@ class CVEducationModelTest(TestCase):
         # Check data is saved
         self.assertEqual(Education.objects.all().count(), 2)
         savedEducation= Education.objects.first()
-        check_work_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
+        check_education_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
         savedEducation= Education.objects.all()[1]
-        check_work_data(self,savedEducation, {'school':school2,  'grade':grade2, 'start':start2, 'finish':finish2})
+        check_education_data(self,savedEducation, {'school':school2,  'grade':grade2, 'start':start2, 'finish':finish2})

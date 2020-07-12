@@ -53,3 +53,11 @@ class Work(models.Model):
 
     def __str__(self):
         return self.company
+
+
+class Education(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    school = models.CharField(max_length=200, default='')
+    grade = models.CharField(max_length=200, default='')
+    start = models.CharField(max_length=200, default='')
+    finish = models.CharField(max_length=200, default='')
