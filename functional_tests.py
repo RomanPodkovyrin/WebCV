@@ -220,7 +220,20 @@ class NewCVVisitorTest(unittest.TestCase):
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
     
     def test_can_see_education(self):
-        self.fail("Finish")
+        
+        # James loads the website
+        self.browser.get('http://localhost:8000/')
+
+        # James clicks the "CV" in the menu option
+        cv_button = self.browser.find_element_by_id('id_cv_link_button')
+        cv_button.click()
+
+        # James can see the correct work items
+        education_id = self.browser.find_elements_by_id('id_education')
+        self.assertGreater(len(work_id), 0, "There are no education posts")
+        for education in education_id:
+            for item in ['id_school', 'id_grade', 'id_start','id_finish']:
+                education.find_element_by_id(item)
 
     def test_visitor_cannont_edit_education_with_url(self):
         self.browser.get('http://localhost:8000/cv/education/edit/1')

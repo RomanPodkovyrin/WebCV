@@ -340,18 +340,27 @@ def check_education_data(self,modelObject,data):
 
 class CVEducationTest(TestCase):
     def test_education_add_returns_correct_html_template(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+
+        response = self.client.get('/cv/education/add')
+        self.assertTemplateUsed(response, 'blog/education_edit.html')
     
     def test_education_add_can_remember_POST_request(self):
         self.fail("Finish")
     
     def test_education_edit_returns_correct_html_response(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+        Education.objects.create(author=me, school=school, grade=grade, start=start, finish=finish )
+
+        response = self.client.get('/cv/education/edit/1')
+        self.assertTemplateUsed(response, 'blog/education_edit.html')
 
     def test_education_edit_can_remember_POST_request(self):
         self.fail("Finish")
 
-class CVEducationTest(TestCase):
+class CVEducationModelTest(TestCase):
 
     def test_saving_and_retrieving_times(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
