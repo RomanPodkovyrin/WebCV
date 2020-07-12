@@ -396,7 +396,7 @@ class CVEducationTest(TestCase):
 
         # Send data
         self.assertEqual(Education.objects.count(), 1)
-        response1 = self.client.post('/cv/education/add/', data={'school':school2, 'grade':grade2, 'start':start2, 'finish':finish2})
+        response1 = self.client.post('/cv/education/edit/1/', data={'school':school2, 'grade':grade2, 'start':start2, 'finish':finish2})
 
         # data was saved into the database
         self.assertEqual(Education.objects.count(),1)

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone # for queryset filter
-from .models import Post, CV, Work # include the model written previously
-from .forms import PostForm, CVForm, WorkForm
+from .models import Post, CV, Work, Education # include the model written previously
+from .forms import PostForm, CVForm, WorkForm, EducationForm
 
 # Create your views here.
 def post_list(request):
@@ -50,10 +50,11 @@ def post_edit(request, pk):
 def cv_page(request):
     cv = CV.objects.first()
     works = Work.objects.all()
+    educations = Education.objects.all()
     # if (cv is None):
     #     cv = CV.objects.create(author=request.user)
 
-    return render(request, 'blog/cv_page.html', {"cv": cv, "works": works})
+    return render(request, 'blog/cv_page.html', {"cv": cv, "works": works, "educations": educations})
 
 def cv_edit(request):
     if not request.user.is_authenticated:
@@ -108,7 +109,34 @@ def work_edit(request, pk):
     return render(request,'blog/work_edit.html',{'form': form})
 
 def education_add(request):
-    return render(request,'blog/education_edit.html')
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    if request.method == "POST":# Accessing page for the first time an we want a blank form
+        form = EducationForm(request.POST)
+        if form.is_valid():# Checking if the form is correct
+            # Saving it
+            education = form.save(commit=False)# false means we don't want to save the post model yet
+            education.author = request.user
+            education.save()
+            return redirect('cv_page')# redirects us to the new post
+    else:# we go back to the view with all the form data we just typed
+        form = EducationForm()
+    return render(request,'blog/education_edit.html', {'form': form})
 
 def education_edit(request, pk):
-    return render(request,'blog/education_edit.html')
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    education = get_object_or_404(Education, pk=pk)
+
+    if request.method == "POST":
+        form = EducationForm(request.POST, instance=education)
+        if form.is_valid():
+            education = form.save(commit=False)
+            education.author = request.user
+            education.save()
+            return redirect('cv_page')
+    else:
+        form = EducationForm(instance=education)
+    return render(request,'blog/education_edit.html',{'form': form})

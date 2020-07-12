@@ -230,7 +230,7 @@ class NewCVVisitorTest(unittest.TestCase):
 
         # James can see the correct work items
         education_id = self.browser.find_elements_by_id('id_education')
-        self.assertGreater(len(work_id), 0, "There are no education posts")
+        self.assertGreater(len(education_id), 0, "There are no education posts")
         for education in education_id:
             for item in ['id_school', 'id_grade', 'id_start','id_finish']:
                 education.find_element_by_id(item)
@@ -431,12 +431,12 @@ class AdminCVTests(unittest.TestCase):
         # works = work_list_table.find_elements_by_id("id_work")
         # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
         #     self.assertIn(tag, work_list_table.text)
-
-        self.assertEqual(self.browser.find_element_by_id("id_company").text,company_text)
-        self.assertEqual(self.browser.find_element_by_id("id_job_title").text,job_text)
-        self.assertEqual(self.browser.find_element_by_id("id_description").text,description_text)
-        self.assertEqual(self.browser.find_element_by_id("id_start").text,date_from_text)
-        self.assertEqual(self.browser.find_element_by_id("id_finish").text,date_to_text)
+        work = self.browser.find_element_by_id("id_work_list_table")
+        self.assertEqual(work.find_element_by_id("id_company").text,company_text)
+        self.assertEqual(work.find_element_by_id("id_job_title").text,job_text)
+        self.assertEqual(work.find_element_by_id("id_description").text,description_text)
+        self.assertEqual(work.find_element_by_id("id_start").text,date_from_text)
+        self.assertEqual(work.find_element_by_id("id_finish").text,date_to_text)
 
         for work_item in work_list_table:
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
@@ -445,7 +445,7 @@ class AdminCVTests(unittest.TestCase):
     def test_can_add_education(self):
         self.browser.get("http://localhost:8000/cv/")
 
-        new_education = self.browser.find_element_by_id("add_education")
+        new_education = self.browser.find_element_by_id("add_new_education")
         new_education.click()
         self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/education/add/")
 
@@ -481,8 +481,8 @@ class AdminCVTests(unittest.TestCase):
     
     def test_can_edit_education(self):
         self.browser.get("http://localhost:8000/cv/")
-        work = self.browser.find_elements_by_id("education_edit_button")
-        work[0].click()
+        education = self.browser.find_elements_by_id("education_edit_button")
+        education[0].click()
 
         self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/education/edit/1/")
 
@@ -518,16 +518,15 @@ class AdminCVTests(unittest.TestCase):
         # works = work_list_table.find_elements_by_id("id_work")
         # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
         #     self.assertIn(tag, work_list_table.text)
-
-        self.assertEqual(self.browser.find_element_by_id("id_school").text,school_text)
-        self.assertEqual(self.browser.find_element_by_id("id_grade").text,grade_text)
-        self.assertEqual(self.browser.find_element_by_id("id_start").text,date_from_text)
-        self.assertEqual(self.browser.find_element_by_id("id_finish").text,date_to_text)
+        education = self.browser.find_element_by_id("id_education_list_table")
+        self.assertEqual(education.find_element_by_id("id_school").text,school_text)
+        self.assertEqual(education.find_element_by_id("id_grade").text,grade_text)
+        self.assertEqual(education.find_element_by_id("id_start").text,date_from_text)
+        self.assertEqual(education.find_element_by_id("id_finish").text,date_to_text)
 
         for education_item in education_list_table:
             for x in [school_text, grade_text, date_from_text, date_to_text]:
                 self.assertIn(x in education_item.text)
-        self.fail("Finish")
 
 
 
