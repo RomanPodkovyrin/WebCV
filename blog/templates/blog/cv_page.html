@@ -8,9 +8,6 @@
 {% endif %}
 <div id="id_cv_form">
 	<div>
-		<div id="headshot">
-			<img src="headshot.jpg" alt="image" />
-		</div>
 		
 		<div id="id_name">
 			<h1>{{ cv.name }}</h1>
@@ -42,7 +39,7 @@
 	<div>	
 		<section>
 			<div >
-				<h1><a  >Work Experience</a></h1>
+				<h1>Work Experience</h1>
 			</div>
 			
 			<div id="id_work_list_table">
@@ -59,8 +56,8 @@
 						<p id="id_description">{{ work.description }}</p>
 
 						<div class="date">
-							<div>Start: <p id="id_start">{{ work.start }}</p></div>
-							<div>Finish: <p id="id_finish">{{ work.finish }}</p></div>
+							<div class="date-element" >Start: <p id="id_start">{{ work.start }}</p></div>
+							<div class="date-element">Finish: <p id="id_finish">{{ work.finish }}</p></div>
 						</div>
 					</div>
 				{% endfor %}
@@ -100,8 +97,8 @@
 						<p id="id_grade">{{ education.grade }}</p>
 
 						<div class="date">
-							<div>Start: <p id="id_start">{{ education.start }}</p></div>
-							<div>Finish: <p id="id_finish">{{ education.finish }}</p></div>
+							<div class="date-element" >Start: <p id="id_start">{{ education.start }}</p></div>
+							<div class="date-element" >Finish: <p id="id_finish">{{ education.finish }}</p></div>
 						</div>
 					</div>
 				{% endfor %}

@@ -10,10 +10,13 @@
     </head>
     <body>
         <div class="page-header">
+            
             {% block header %}
             {% endblock %}
-            <h1><a href="{% url 'cv_page' %}" id="id_cv_link_button">CV</a></h1>
-            <h1><a href="/">Blog</a></h1>
+            <div class="page-header-menu">
+                <h1><a class="menu-element" href="{% url 'cv_page' %}" id="id_cv_link_button">CV</a></h1>
+                <h1><a class="menu-element" href="/">Blog</a></h1>
+            </div>
         </div>
         <div class="content container">
             <div class="row">
