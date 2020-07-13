@@ -78,6 +78,11 @@ h1, h2, h3, h4 {
     color: #f8f8f2;
 }
 
+textarea, input{
+    background-color: #30475e;
+
+}
+
 
 body {
     background-color: #222831;
