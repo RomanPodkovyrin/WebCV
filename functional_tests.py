@@ -152,7 +152,7 @@ class NewCVVisitorTest(unittest.TestCase):
 
         # James can see the correct cv items
         page_source = self.browser.page_source
-        for item in ['id_name','id_personal_statement','id_skills', 'id_phone', 'id_email']:
+        for item in ['id_name','id_personal_statement', 'id_phone', 'id_email']:
             self.assertIn(item, page_source)
      
     def test_visitor_cannot_edit_cv_with_button(self):
@@ -237,6 +237,14 @@ class NewCVVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000/cv/education/edit/1')
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
+    def test_visitor_can_see_and_read_skill(self):
+        self.fail("Finish")
+    
+    def test_visitor_cannot_edit_skill_with_url(self):
+        self.fail("Finish")
+    
+    def test_visitor_cannot_add_skill_with_url(self):
+        self.fail("Finish")
 
 class AdminCVTests(unittest.TestCase):
     # Roman is the administrator
@@ -288,12 +296,6 @@ class AdminCVTests(unittest.TestCase):
         personal_statement.clear()
         personal_statement.send_keys(personal_statement_text)
 
-        # adds skills
-        skills = self.browser.find_element_by_id('id_skills')
-        skills_text = 'Java, Python ' + current_date_and_time
-        skills.clear()
-        skills.send_keys(skills_text)
-
         # add phone
         phone = self.browser.find_element_by_id('id_phone')
         phone_text = '0000000 ' + current_date_and_time
@@ -320,8 +322,6 @@ class AdminCVTests(unittest.TestCase):
         self.assertEqual(self.browser.find_element_by_id("id_name").text,nametext)
         # personal statement
         self.assertEqual(self.browser.find_element_by_id("id_personal_statement").text,personal_statement_text)
-        # skills
-        self.assertEqual(self.browser.find_element_by_id("id_skills").text,skills_text)
         # phone
         self.assertEqual(self.browser.find_element_by_id("id_phone").text,phone_text)
         # email
@@ -526,7 +526,11 @@ class AdminCVTests(unittest.TestCase):
             for x in [school_text, grade_text, date_from_text, date_to_text]:
                 self.assertIn(x , education_item.text)
 
+    def test_can_add_skill(self):
+        self.fail("Finish")
 
+    def test_can_edit_skill(self):
+        self.fail("Finish")
 
 
 if __name__ == '__main__':

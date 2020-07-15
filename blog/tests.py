@@ -113,12 +113,10 @@ email2 = "email@example.com2"
 
 def check_cv_data(self,modelObject,data):
         # Checks if model object containt the right information as data
-
         self.assertEqual(modelObject.name, data["name"])
         self.assertEqual(modelObject.personal_statement, data["personal_statement"])
         self.assertEqual(modelObject.phone, data["phone"])
         self.assertEqual(modelObject.email, data["email"])
-        self.assertEqual(modelObject.skills, data["skills"])
 
 
 class CVHomePageTest(TestCase):
@@ -150,12 +148,12 @@ class CVHomePageTest(TestCase):
         # Send data
         self.assertEqual(CV.objects.count(), 0)
         response1 = self.client.post('/cv/edit/', data={'name': name, 'personal_statement': personal_statement,
-         "skills": skills, "email": email, "phone": phone})
+         "email": email, "phone": phone})
 
         # data was saved into the database
         self.assertEqual(CV.objects.count(),1)
         savedCV= CV.objects.first()
-        check_cv_data(self, savedCV, {'name': name, 'personal_statement': personal_statement,"skills": skills, "email": email, "phone": phone})
+        check_cv_data(self, savedCV, {'name': name, 'personal_statement': personal_statement, "email": email, "phone": phone})
         
         # redirected to the right page
         self.assertEqual(response1.status_code,302)
@@ -167,7 +165,6 @@ class CVHomePageTest(TestCase):
         self.assertIn(personal_statement, response2.content.decode())
         self.assertIn(phone, response2.content.decode())
         self.assertIn(email, response2.content.decode())
-        self.assertIn(skills, response2.content.decode())
 
 
 class CVModelTest (TestCase):
@@ -178,20 +175,20 @@ class CVModelTest (TestCase):
 
         # Add data to the model
         self.assertEqual(CV.objects.all().count(), 0)
-        CV.objects.create(author=me, name=name, personal_statement=personal_statement, skills=skills,phone=phone,email=email)
+        CV.objects.create(author=me, name=name, personal_statement=personal_statement,phone=phone,email=email)
 
         # Check data is saved
         self.assertEqual(CV.objects.all().count(), 1)
         savedCV= CV.objects.first()
-        check_cv_data(self,savedCV, {'name': name, 'personal_statement': personal_statement,"skills": skills, "email": email, "phone": phone})
+        check_cv_data(self,savedCV, {'name': name, 'personal_statement': personal_statement, "email": email, "phone": phone})
         
         # Update model
-        CV.objects.all().update(name=name2, personal_statement=personal_statement2, skills=skills2,phone=phone2,email=email2)
+        CV.objects.all().update(name=name2, personal_statement=personal_statement2,phone=phone2,email=email2)
         self.assertEqual(CV.objects.all().count(), 1)
 
         # Check data was updated
         savedCV2 = CV.objects.first()
-        check_cv_data(self,savedCV2, {'name': name2, 'personal_statement': personal_statement2,"skills": skills2, "email": email2, "phone": phone2})
+        check_cv_data(self,savedCV2, {'name': name2, 'personal_statement': personal_statement2, "email": email2, "phone": phone2})
 
 
 # Test data
@@ -345,7 +342,7 @@ def check_education_data(self,modelObject,data):
 
 
 class CVEducationTest(TestCase):
-    
+
     def test_education_add_returns_correct_html_template(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
@@ -443,3 +440,23 @@ class CVEducationModelTest(TestCase):
         check_education_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
         savedEducation= Education.objects.all()[1]
         check_education_data(self,savedEducation, {'school':school2,  'grade':grade2, 'start':start2, 'finish':finish2})
+
+
+class CVSkillTest(TestCase):
+
+    def test_skill_add_returns_correct_html_template(self):
+        self.fail("Finish")
+
+    def test_skill_add_can_remember_POST_request(self):
+        self.fail("Finish")
+
+    def test_skill_edit_returns_correct_html_response(self):
+        self.fail("Finish")
+    
+    def test_skill_edit_can_remember_POST_request(self):
+        self.fail("Finish")
+
+class CVSkillModelTest(TestCase):
+
+    def test_saving_and_retrieving_times(self):
+        self.fail("Finish")

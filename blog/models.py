@@ -23,7 +23,7 @@ class CV(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, default='')#models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     personal_statement = models.TextField(default='')
-    skills = models.CharField(max_length=200, default='')
+    # skills = models.CharField(max_length=200, default='')
     phone = models.CharField(max_length=200, default='')
     email = models.CharField(max_length=200, default='')
 

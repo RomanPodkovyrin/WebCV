@@ -9,7 +9,7 @@ class PostForm(forms.ModelForm):
 class CVForm(forms.ModelForm):
     class Meta:
         model = CV
-        fields = ('name', 'personal_statement', 'skills', 'phone', 'email' ,)
+        fields = ('name', 'personal_statement', 'phone', 'email' ,)
 
 class WorkForm(forms.ModelForm):
     class Meta:
