@@ -457,7 +457,7 @@ class CVSkillTest(TestCase):
 
 
         # Send data
-        self.assertEqual(SKill.objects.count(), 0)
+        self.assertEqual(Skill.objects.count(), 0)
         response1 = self.client.post('/cv/skill/add/', data={'skill':"java"})
 
         # data was saved into the database
@@ -492,7 +492,7 @@ class CVSkillTest(TestCase):
 
         # Send data
         self.assertEqual(Skill.objects.count(), 1)
-        response1 = self.client.post('/cv/skill/edit/1/', data={'skill':"OCaml"})
+        response1 = self.client.post('/cv/skill/edit/1/', data={'skill':"oCaml"})
 
         # data was saved into the database
         self.assertEqual(Skill.objects.count(),1)

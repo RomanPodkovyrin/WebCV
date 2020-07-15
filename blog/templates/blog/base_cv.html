@@ -4,5 +4,6 @@
     {% if user.is_authenticated %}
             <a href="{% url 'work_add' %}" id="add_new_work" class="top-menu"><span class="glyphicon glyphicon-plus">Work</span></a>
             <a href="{% url 'education_add' %}" id="add_new_education" class="top-menu"><span class="glyphicon glyphicon-plus">Education</span></a>
+            <a href="{% url 'skill_add' %}" id="add_new_skill" class="top-menu"><span class="glyphicon glyphicon-plus">Skill</span></a>
     {% endif %} 
 {% endblock %}

@@ -245,11 +245,8 @@ class NewCVVisitorTest(unittest.TestCase):
         cv_button.click()
 
         # James can see the correct work items
-        skills_id = self.browser.find_elements_by_id('id_skills')
-        self.assertGreater(len(work_id), 0, "There are no skill posts")
-        for skill in skills_id:
-            for item in ['id_skill']:
-                skill.find_element_by_id(item)
+        skills_id = self.browser.find_elements_by_id('id_skill')
+        self.assertGreater(len(skills_id), 0, "There are no skill posts")
     
     def test_visitor_cannot_edit_skill_with_url(self):
         self.browser.get('http://localhost:8000/cv/skill/edit/1')

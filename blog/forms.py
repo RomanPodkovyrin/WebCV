@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, CV, Work, Education
+from .models import Post, CV, Work, Education, Skill
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -20,3 +20,8 @@ class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
         fields = ('school', 'grade','start','finish')
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ('skill',)

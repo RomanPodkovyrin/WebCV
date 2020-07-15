@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone # for queryset filter
-from .models import Post, CV, Work, Education # include the model written previously
-from .forms import PostForm, CVForm, WorkForm, EducationForm
+from .models import Post, CV, Work, Education, Skill # include the model written previously
+from .forms import PostForm, CVForm, WorkForm, EducationForm, SkillForm
 
 # Create your views here.
 def post_list(request):
@@ -51,10 +51,11 @@ def cv_page(request):
     cv = CV.objects.first()
     works = Work.objects.all()
     educations = Education.objects.all()
+    skills = Skill.objects.all()
     # if (cv is None):
     #     cv = CV.objects.create(author=request.user)
 
-    return render(request, 'blog/cv_page.html', {"cv": cv, "works": works, "educations": educations})
+    return render(request, 'blog/cv_page.html', {"cv": cv, "works": works, "educations": educations, "skills": skills})
 
 def cv_edit(request):
     if not request.user.is_authenticated:
@@ -140,3 +141,36 @@ def education_edit(request, pk):
     else:
         form = EducationForm(instance=education)
     return render(request,'blog/education_edit.html',{'form': form})
+
+def skill_add(request):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    if request.method == "POST":# Accessing page for the first time an we want a blank form
+        form = SkillForm(request.POST)
+        if form.is_valid():# Checking if the form is correct
+            # Saving it
+            skill = form.save(commit=False)# false means we don't want to save the post model yet
+            skill.author = request.user
+            skill.save()
+            return redirect('cv_page')# redirects us to the new post
+    else:# we go back to the view with all the form data we just typed
+        form = SkillForm()
+    return render(request,'blog/skill_edit.html', {'form': form})
+
+def skill_edit(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    skill = get_object_or_404(Skill, pk=pk)
+
+    if request.method == "POST":
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.author = request.user
+            skill.save()
+            return redirect('cv_page')
+    else:
+        form = SkillForm(instance=skill)
+    return render(request,'blog/skill_edit.html', {'form': form})
