@@ -238,13 +238,26 @@ class NewCVVisitorTest(unittest.TestCase):
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
     def test_visitor_can_see_and_read_skill(self):
-        self.fail("Finish")
+        self.browser.get('http://localhost:8000/')
+
+        # James clicks the "CV" in the menu option
+        cv_button = self.browser.find_element_by_id('id_cv_link_button')
+        cv_button.click()
+
+        # James can see the correct work items
+        skills_id = self.browser.find_elements_by_id('id_skills')
+        self.assertGreater(len(work_id), 0, "There are no skill posts")
+        for skill in skills_id:
+            for item in ['id_skill']:
+                skill.find_element_by_id(item)
     
     def test_visitor_cannot_edit_skill_with_url(self):
-        self.fail("Finish")
+        self.browser.get('http://localhost:8000/cv/skill/edit/1')
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
     
     def test_visitor_cannot_add_skill_with_url(self):
-        self.fail("Finish")
+        self.browser.get('http://localhost:8000/cv/skill/add')
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/", "User was meant to be redirected to the cv page")
 
 class AdminCVTests(unittest.TestCase):
     # Roman is the administrator
@@ -527,10 +540,59 @@ class AdminCVTests(unittest.TestCase):
                 self.assertIn(x , education_item.text)
 
     def test_can_add_skill(self):
-        self.fail("Finish")
+        self.browser.get("http://localhost:8000/cv/")
+
+        new_skill = self.browser.find_element_by_id("add_new_skill")
+        new_skill.click()
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/skill/add/")
+
+        dateandtime = str(datetime.now())
+
+        skill = self.browser.find_element_by_id("id_skill")
+        skill_text = "Google " + dateandtime
+        skill.send_keys(skill_text)
+
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        skill_list_table = self.browser.find_elements_by_class_name("skills")
+
+        for skill_item in skill_list_table:
+            self.assertIn(skill_text , skill_item.text)
 
     def test_can_edit_skill(self):
-        self.fail("Finish")
+        self.browser.get("http://localhost:8000/cv/")
+        skill = self.browser.find_elements_by_id("skill_edit_button")
+        skill[0].click()
+
+        self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/skill/edit/1/")
+
+        dateandtime = str(datetime.now())
+
+        skill = self.browser.find_element_by_id("id_skill")
+        skill_text = "Java " + dateandtime
+        skill.clear()
+        skill.send_keys(skill_text)
+
+        save = self.browser.find_element_by_id('id_save_button')
+        save.click()
+
+        time.sleep(1)
+        self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
+
+        skill_list_table = self.browser.find_elements_by_class_name("skills")
+        # works = work_list_table.find_elements_by_id("id_work")
+        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
+        #     self.assertIn(tag, work_list_table.text)
+        skill = self.browser.find_element_by_id("id_skill_list_table")
+        self.assertEqual(skill.find_element_by_id("id_skill").text,skill_text)
+
+        for skill_item in skill_list_table:
+            self.assertIn(skill_text , skill_item.text)
+
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 from blog.views import post_list, cv_page, post_new, cv_edit
-from blog.models import Post, CV, Work, Education
+from blog.models import Post, CV, Work, Education, Skill
 
 
 #################### Blog ####################
@@ -96,14 +96,12 @@ class PostModelTest(TestCase):
 # CV
 name = 'Roman Podkovyrin'
 personal_statement = "Hello, please hire me"
-skills = 'Java, Python, Russian'
 phone = "00000000"
 email = "email@example.com"
 
 
 name2 = 'Roman Podkovyrin2'
 personal_statement2 = "Hello, please hire me2"
-skills2 = 'Java, Python, Russian2'
 phone2 = "000000002"
 email2 = "email@example.com2"
 
@@ -445,18 +443,94 @@ class CVEducationModelTest(TestCase):
 class CVSkillTest(TestCase):
 
     def test_skill_add_returns_correct_html_template(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+
+        response = self.client.get('/cv/skill/add/')
+        self.assertTemplateUsed(response, 'blog/skill_edit.html')
 
     def test_skill_add_can_remember_POST_request(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        self.client.force_login(user)
+
+
+        # Send data
+        self.assertEqual(SKill.objects.count(), 0)
+        response1 = self.client.post('/cv/skill/add/', data={'skill':"java"})
+
+        # data was saved into the database
+        self.assertEqual(Skill.objects.count(),1)
+        savedSkill= Skill.objects.first()
+        self.assertEqual(savedSkill.skill, "java")
+        
+        # redirected to the right page
+        self.assertEqual(response1.status_code,302)
+        self.assertEqual(response1['location'],'/cv/')
+
+        # information added is displayed on the page
+        response2 = self.client.get(response1['location'])
+        self.assertIn("java", response2.content.decode())
 
     def test_skill_edit_returns_correct_html_response(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        self.client.force_login(user)
+        Skill.objects.create(author=User.objects.get(username='roman'), skill="Test")
+
+        response = self.client.get('/cv/skill/edit/1/')
+        self.assertTemplateUsed(response, 'blog/skill_edit.html')
     
     def test_skill_edit_can_remember_POST_request(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        Skill.objects.create(author=me, skill="Python")
+
+        self.client.force_login(user)
+
+
+        # Send data
+        self.assertEqual(Skill.objects.count(), 1)
+        response1 = self.client.post('/cv/skill/edit/1/', data={'skill':"OCaml"})
+
+        # data was saved into the database
+        self.assertEqual(Skill.objects.count(),1)
+        savedSkill= Skill.objects.first()
+        self.assertEqual(savedSkill.skill, "oCaml")
+        
+        # redirected to the right page
+        self.assertEqual(response1.status_code,302)
+        self.assertEqual(response1['location'],'/cv/')
+
+        # information added is displayed on the page
+        response2 = self.client.get(response1['location'])
+        self.assertIn("oCaml", response2.content.decode())
 
 class CVSkillModelTest(TestCase):
 
     def test_saving_and_retrieving_times(self):
-        self.fail("Finish")
+        user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
+        me = User.objects.get(username='roman')
+
+        # Add data to the model
+        self.assertEqual(Skill.objects.all().count(), 0)
+        skill = "Java"
+        skill2 = "Python"
+
+        Skill.objects.create(author=me, skill=skill )
+
+        # Check data is saved
+        self.assertEqual(Skill.objects.all().count(), 1)
+        savedSkill= Skill.objects.first()
+        self.assertEqual(savedSkill.skill, skill)
+        
+        # add Second work
+        Skill.objects.create(author=me, skill=skill2)
+
+        # Check data is saved
+        self.assertEqual(Skill.objects.all().count(), 2)
+        savedSkill= Skill.objects.first()
+        self.assertEqual(savedSkill.skill, skill)
+        savedSkill= Skill.objects.all()[1]
+        self.assertEqual(savedSkill.skill, skill2)

@@ -61,3 +61,7 @@ class Education(models.Model):
     grade = models.CharField(max_length=200, default='')
     start = models.CharField(max_length=200, default='')
     finish = models.CharField(max_length=200, default='')
+
+class Skill(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    skill = models.CharField(max_length=200, default='')
