@@ -438,7 +438,7 @@ class AdminCVTests(unittest.TestCase):
 
         for work_item in work_list_table:
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
-                self.assertIn(x in work_item.text)
+                self.assertIn(x, work_item.text)
 
     def test_can_add_education(self):
         self.browser.get("http://localhost:8000/cv/")
@@ -524,7 +524,7 @@ class AdminCVTests(unittest.TestCase):
 
         for education_item in education_list_table:
             for x in [school_text, grade_text, date_from_text, date_to_text]:
-                self.assertIn(x in education_item.text)
+                self.assertIn(x , education_item.text)
 
 
 
