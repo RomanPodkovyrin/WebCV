@@ -38,7 +38,6 @@ class NewBlogVisitorTest(unittest.TestCase):
             self.fail("Visitor is not ment to be able to add a new post")
         except:
             pass
-
     
     def test_cannot_add_new_post_with_url(self):
         self.browser.get("http://localhost:8000/post/new/")
@@ -54,7 +53,6 @@ class NewBlogVisitorTest(unittest.TestCase):
             self.fail("Visitor is not supposed to be able to edit a post")
         except:
             pass
-
 
     def test_cannot_edit_post_with_url(self):
         self.browser.get("http://localhost:8000/post/new/")
@@ -385,7 +383,7 @@ class AdminCVTests(unittest.TestCase):
 
         for work_item in work_list_table:
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
-                self.assertIn(x in work_item.text)
+                self.assertIn(x , work_item.text)
 
     def test_can_edit_work(self):
         self.browser.get("http://localhost:8000/cv/")
@@ -477,7 +475,7 @@ class AdminCVTests(unittest.TestCase):
 
         for education_item in education_list_table:
             for x in [school_text, grade_text, date_from_text, date_to_text]:
-                self.assertIn(x in education_item.text)
+                self.assertIn(x , education_item.text)
     
     def test_can_edit_education(self):
         self.browser.get("http://localhost:8000/cv/")
