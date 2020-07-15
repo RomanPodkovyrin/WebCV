@@ -169,6 +169,7 @@ class CVHomePageTest(TestCase):
         self.assertIn(email, response2.content.decode())
         self.assertIn(skills, response2.content.decode())
 
+
 class CVModelTest (TestCase):
 
     def test_saving_and_retrieving_times(self):
@@ -342,7 +343,9 @@ def check_education_data(self,modelObject,data):
         self.assertEqual(modelObject.start, data["start"])
         self.assertEqual(modelObject.finish, data["finish"])
 
+
 class CVEducationTest(TestCase):
+    
     def test_education_add_returns_correct_html_template(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
         self.client.force_login(user)
