@@ -29,17 +29,19 @@ class NewBlogVisitorTest(unittest.TestCase):
         )
 
     def test_cannot_add_new_post_with_button(self):
-
+        # Ben tries to add a new post to romans blog post
         self.browser.get("http://localhost:8000/")
-        # test that user cannot click on the button to add
+
         try:
             add_post = self.browser.find_element_by_id("add_new_post")
             add_post.click()
             self.fail("Visitor is not ment to be able to add a new post")
         except:
+            # But he bails to find the button
             pass
     
     def test_cannot_add_new_post_with_url(self):
+        # Ben tries to add a new post with url 
         self.browser.get("http://localhost:8000/post/new/")
         self.assertEqual(self.browser.current_url,"http://localhost:8000/")
 
@@ -348,18 +350,17 @@ class AdminCVTests(unittest.TestCase):
 
         self.fail("There should be no add new post button")
 
-        # time.sleep(2)
-        # self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/", "there should be no new post button")
-
     def test_can_add_work(self):
+        # Roman goes to cv url
         self.browser.get("http://localhost:8000/cv/")
 
+        # click add new work button
         new_work = self.browser.find_element_by_id("add_new_work")
         new_work.click()
         self.assertEqual(self.browser.current_url,"http://localhost:8000/cv/work/add/")
 
         dateandtime = str(datetime.now())
-
+        # inputs his info
         company = self.browser.find_element_by_id("id_company")
         company_text = "Google " + dateandtime
         company.send_keys(company_text)
@@ -380,16 +381,16 @@ class AdminCVTests(unittest.TestCase):
         date_to_text = "2. " + dateandtime
         date_to.send_keys(date_to_text)
 
+        # presses button to save this info
         save = self.browser.find_element_by_id('id_save_button')
         save.click()
 
         time.sleep(1)
+        # he gets redirected to cv page again
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
 
+        # he can see all the information he just added on the page
         work_list_table = self.browser.find_elements_by_class_name("work")
-        # works = work_list_table.find_elements_by_id("id_work")
-        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
-        #     self.assertIn(tag, work_list_table.text)
 
         for work_item in work_list_table:
             for x in [company_text, job_text, description_text, date_from_text, date_to_text]:
@@ -436,9 +437,7 @@ class AdminCVTests(unittest.TestCase):
         self.assertEqual(self.browser.current_url, "http://localhost:8000/cv/")
 
         work_list_table = self.browser.find_elements_by_class_name("work")
-        # works = work_list_table.find_elements_by_id("id_work")
-        # for tag in [company_text, job_text, description_text, date_from_text, date_to_text]:
-        #     self.assertIn(tag, work_list_table.text)
+        
         work = self.browser.find_element_by_id("id_work_list_table")
         self.assertEqual(work.find_element_by_id("id_company").text,company_text)
         self.assertEqual(work.find_element_by_id("id_job_title").text,job_text)
