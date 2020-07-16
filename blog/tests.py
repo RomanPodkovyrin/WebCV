@@ -105,10 +105,6 @@ personal_statement2 = "Hello, please hire me2"
 phone2 = "000000002"
 email2 = "email@example.com2"
 
-
-# Project
-
-
 def check_cv_data(self,modelObject,data):
         # Checks if model object containt the right information as data
         self.assertEqual(modelObject.name, data["name"])
@@ -429,7 +425,7 @@ class CVEducationModelTest(TestCase):
         savedEducation= Education.objects.first()
         check_education_data(self,savedEducation, {'school':school, 'grade':grade, 'start':start, 'finish':finish})
         
-        # add Second work
+        # add Second Education
         Education.objects.create(author=me, school=school2, grade=grade2, start=start2, finish=finish2 )
 
         # Check data is saved
@@ -525,7 +521,7 @@ class CVSkillModelTest(TestCase):
         savedSkill= Skill.objects.first()
         self.assertEqual(savedSkill.skill, skill)
         
-        # add Second work
+        # add Second Skill
         Skill.objects.create(author=me, skill=skill2)
 
         # Check data is saved
