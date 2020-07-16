@@ -36,6 +36,22 @@
 		</section>
 	</div>
 
+	<section>
+		<div>
+			<h2  >Key Skills</h1>
+		</div>
+		
+		<div id="id_skill_list_table" >
+			{% for skill in skills%}
+				<ul class="skill" id="id_skill">
+					{% if user.is_authenticated %}
+								<a id="skill_edit_button" class="btn btn-default" href="{% url 'skill_edit' pk=skill.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+						{% endif %}
+					<li>{{ skill.skill }}</li>
+				</ul>
+			{% endfor %}
+		</div>
+	</section>
 
 	<div>	
 		<section>
@@ -43,11 +59,11 @@
 				<h2>Work Experience</h1>
 			</div>
 			
-			<div class="work" id="id_work_list_table">
+			<div id="id_work_list_table">
 				<article>
 				{% for work in works %}
 					
-					<div id="id_work">
+					<div class="work" id="id_work">
 						{% if user.is_authenticated %}
 								<a id="work_edit_button" class="btn btn-default" href="{% url 'work_edit' pk=work.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
 						{% endif %}
@@ -68,33 +84,16 @@
 		</section>
 	</div>	
 	
-	<section>
-		<div>
-			<h2>Key Skills</h1>
-		</div>
-		
-		<div class="skill" id="id_skill_list_table" >
-			{% for skill in skills%}
-				<ul id="id_skill">
-					{% if user.is_authenticated %}
-								<a id="skill_edit_button" class="btn btn-default" href="{% url 'skill_edit' pk=skill.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-						{% endif %}
-					<li>{{ skill.skill }}</li>
-				</ul>
-			{% endfor %}
-		</div>
-	</section>
-	
 	
 	<section>
 		<div>
-			<h2>Education</h1>
+			<h2 >Education</h1>
 		</div>
 		
-		<div class="education" id="id_education_list_table">
+		<div  id="id_education_list_table">
 			{% for education in educations %}
 					
-					<div id="id_education">
+					<div class="education" id="id_education">
 						{% if user.is_authenticated %}
 								<a id="education_edit_button" class="btn btn-default" href="{% url 'education_edit' pk=education.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
 						{% endif %}
