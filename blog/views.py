@@ -76,101 +76,53 @@ def cv_edit(request):
         form = CVForm(instance=cv)
     return render(request, 'blog/cv_edit.html', {'form': form, 'title':"Editing CV"})
 
-def work_add(request):
+def new_element(request, page_form, title):
     if not request.user.is_authenticated:
         return redirect('cv_page')
 
     if request.method == "POST":# Accessing page for the first time an we want a blank form
-        form = WorkForm(request.POST)
+        form = page_form(request.POST)
         if form.is_valid():# Checking if the form is correct
             # Saving it
-            work = form.save(commit=False)# false means we don't want to save the post model yet
-            work.author = request.user
-            work.save()
+            element = form.save(commit=False)# false means we don't want to save the post model yet
+            element.author = request.user
+            element.save()
             return redirect('cv_page')# redirects us to the new post
     else:# we go back to the view with all the form data we just typed
-        form = WorkForm()
-    return render(request, 'blog/cv_edit.html', {'form': form, 'title':"Adding New Work Experience"})
+        form = page_form()
+    return render(request, 'blog/cv_edit.html', {'form': form, 'title':title})
+
+def edit_element(request, pk, model, page_form, title):
+    if not request.user.is_authenticated:
+        return redirect('cv_page')
+
+    element = get_object_or_404(model, pk=pk)
+
+    if request.method == "POST":
+        form = page_form(request.POST, instance=element)
+        if form.is_valid():
+            element = form.save(commit=False)
+            element.author = request.user
+            element.save()
+            return redirect('cv_page')
+    else:
+        form = page_form(instance=element)
+    return render(request,'blog/cv_edit.html',{'form': form, 'title':title})
+
+def work_add(request):
+    return new_element(request, WorkForm, "Adding New Work Experience" )
 
 def work_edit(request, pk):
-    if not request.user.is_authenticated:
-        return redirect('cv_page')
-
-    work = get_object_or_404(Work, pk=pk)
-
-    if request.method == "POST":
-        form = WorkForm(request.POST, instance=work)
-        if form.is_valid():
-            work = form.save(commit=False)
-            work.author = request.user
-            work.save()
-            return redirect('cv_page')
-    else:
-        form = WorkForm(instance=work)
-    return render(request,'blog/cv_edit.html',{'form': form, 'title':"Editing Work Experinece"})
+    return edit_element(request, pk, Work, WorkForm,"Editing Work Experinece" )
 
 def education_add(request):
-    if not request.user.is_authenticated:
-        return redirect('cv_page')
-
-    if request.method == "POST":# Accessing page for the first time an we want a blank form
-        form = EducationForm(request.POST)
-        if form.is_valid():# Checking if the form is correct
-            # Saving it
-            education = form.save(commit=False)# false means we don't want to save the post model yet
-            education.author = request.user
-            education.save()
-            return redirect('cv_page')# redirects us to the new post
-    else:# we go back to the view with all the form data we just typed
-        form = EducationForm()
-    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Adding New Education"})
+    return new_element(request, EducationForm, "Adding New Education" )
 
 def education_edit(request, pk):
-    if not request.user.is_authenticated:
-        return redirect('cv_page')
-
-    education = get_object_or_404(Education, pk=pk)
-
-    if request.method == "POST":
-        form = EducationForm(request.POST, instance=education)
-        if form.is_valid():
-            education = form.save(commit=False)
-            education.author = request.user
-            education.save()
-            return redirect('cv_page')
-    else:
-        form = EducationForm(instance=education)
-    return render(request,'blog/cv_edit.html',{'form': form, 'title':"Editing Education"})
+    return edit_element(request, pk, Education, EducationForm, "Editing Education")
 
 def skill_add(request):
-    if not request.user.is_authenticated:
-        return redirect('cv_page')
-
-    if request.method == "POST":# Accessing page for the first time an we want a blank form
-        form = SkillForm(request.POST)
-        if form.is_valid():# Checking if the form is correct
-            # Saving it
-            skill = form.save(commit=False)# false means we don't want to save the post model yet
-            skill.author = request.user
-            skill.save()
-            return redirect('cv_page')# redirects us to the new post
-    else:# we go back to the view with all the form data we just typed
-        form = SkillForm()
-    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Adding new Skill"})
+    return new_element(request, SkillForm, "Adding New Skill" )
 
 def skill_edit(request, pk):
-    if not request.user.is_authenticated:
-        return redirect('cv_page')
-
-    skill = get_object_or_404(Skill, pk=pk)
-
-    if request.method == "POST":
-        form = SkillForm(request.POST, instance=skill)
-        if form.is_valid():
-            skill = form.save(commit=False)
-            skill.author = request.user
-            skill.save()
-            return redirect('cv_page')
-    else:
-        form = SkillForm(instance=skill)
-    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Editing Skill"})
+    return edit_element(request, pk, Skill, SkillForm, "Editing Skill")
