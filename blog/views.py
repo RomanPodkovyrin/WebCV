@@ -74,7 +74,7 @@ def cv_edit(request):
             return redirect('cv_page')
     else:
         form = CVForm(instance=cv)
-    return render(request, 'blog/cv_edit.html', {'form': form})
+    return render(request, 'blog/cv_edit.html', {'form': form, 'title':"Editing CV"})
 
 def work_add(request):
     if not request.user.is_authenticated:
@@ -90,7 +90,7 @@ def work_add(request):
             return redirect('cv_page')# redirects us to the new post
     else:# we go back to the view with all the form data we just typed
         form = WorkForm()
-    return render(request, 'blog/work_edit.html', {'form': form})
+    return render(request, 'blog/cv_edit.html', {'form': form, 'title':"Adding New Work Experience"})
 
 def work_edit(request, pk):
     if not request.user.is_authenticated:
@@ -107,7 +107,7 @@ def work_edit(request, pk):
             return redirect('cv_page')
     else:
         form = WorkForm(instance=work)
-    return render(request,'blog/work_edit.html',{'form': form})
+    return render(request,'blog/cv_edit.html',{'form': form, 'title':"Editing Work Experinece"})
 
 def education_add(request):
     if not request.user.is_authenticated:
@@ -123,7 +123,7 @@ def education_add(request):
             return redirect('cv_page')# redirects us to the new post
     else:# we go back to the view with all the form data we just typed
         form = EducationForm()
-    return render(request,'blog/education_edit.html', {'form': form})
+    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Adding New Education"})
 
 def education_edit(request, pk):
     if not request.user.is_authenticated:
@@ -140,7 +140,7 @@ def education_edit(request, pk):
             return redirect('cv_page')
     else:
         form = EducationForm(instance=education)
-    return render(request,'blog/education_edit.html',{'form': form})
+    return render(request,'blog/cv_edit.html',{'form': form, 'title':"Editing Education"})
 
 def skill_add(request):
     if not request.user.is_authenticated:
@@ -156,7 +156,7 @@ def skill_add(request):
             return redirect('cv_page')# redirects us to the new post
     else:# we go back to the view with all the form data we just typed
         form = SkillForm()
-    return render(request,'blog/skill_edit.html', {'form': form})
+    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Adding new Skill"})
 
 def skill_edit(request, pk):
     if not request.user.is_authenticated:
@@ -173,4 +173,4 @@ def skill_edit(request, pk):
             return redirect('cv_page')
     else:
         form = SkillForm(instance=skill)
-    return render(request,'blog/skill_edit.html', {'form': form})
+    return render(request,'blog/cv_edit.html', {'form': form, 'title':"Editing Skill"})

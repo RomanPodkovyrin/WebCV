@@ -220,7 +220,7 @@ class CVWorkTest (TestCase):
         self.client.force_login(user)
 
         response = self.client.get('/cv/work/add/')
-        self.assertTemplateUsed(response, 'blog/work_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
     
     def test_work_add_can_remember_POST_request(self):
         # Login
@@ -258,7 +258,7 @@ class CVWorkTest (TestCase):
         self.client.force_login(user)
 
         response = self.client.get('/cv/work/edit/1/')
-        self.assertTemplateUsed(response, 'blog/work_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
 
     def test_work_edit_can_remember_POST_request(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -346,7 +346,7 @@ class CVEducationTest(TestCase):
         self.client.force_login(user)
 
         response = self.client.get('/cv/education/add/')
-        self.assertTemplateUsed(response, 'blog/education_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
     
     def test_education_add_can_remember_POST_request(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -381,7 +381,7 @@ class CVEducationTest(TestCase):
         Education.objects.create(author=User.objects.get(username='roman'), school=school, grade=grade, start=start, finish=finish )
 
         response = self.client.get('/cv/education/edit/1/')
-        self.assertTemplateUsed(response, 'blog/education_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
 
     def test_education_edit_can_remember_POST_request(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -447,7 +447,7 @@ class CVSkillTest(TestCase):
         self.client.force_login(user)
 
         response = self.client.get('/cv/skill/add/')
-        self.assertTemplateUsed(response, 'blog/skill_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
 
     def test_skill_add_can_remember_POST_request(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
@@ -479,7 +479,7 @@ class CVSkillTest(TestCase):
         Skill.objects.create(author=User.objects.get(username='roman'), skill="Test")
 
         response = self.client.get('/cv/skill/edit/1/')
-        self.assertTemplateUsed(response, 'blog/skill_edit.html')
+        self.assertTemplateUsed(response, 'blog/cv_edit.html')
     
     def test_skill_edit_can_remember_POST_request(self):
         user = User.objects.create(username='roman',email='example@gmail.com',password='1234')
