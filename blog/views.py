@@ -52,8 +52,6 @@ def cv_page(request):
     works = Work.objects.all()
     educations = Education.objects.all()
     skills = Skill.objects.all()
-    # if (cv is None):
-    #     cv = CV.objects.create(author=request.user)
 
     return render(request, 'blog/cv_page.html', {"cv": cv, "works": works, "educations": educations, "skills": skills})
 
@@ -61,10 +59,7 @@ def cv_edit(request):
     if not request.user.is_authenticated:
         return redirect('cv_page')
 
-    # cv = get_object_or_404(CV)
     cv = CV.objects.first()
-    # if (cv is None):
-    #     cv = CV.objects.create(author=request.user)
     if request.method == "POST":
         form = CVForm(request.POST, instance=cv)
         if form.is_valid():
