@@ -67,7 +67,7 @@ h1, h2, h3, h4 {
     padding: 10px;
 }
 
-.work, .education {
+.work, .education, .skill {
     background-color: #30475e;
     border: 2px solid #f2a365;
     border-radius: 25px;

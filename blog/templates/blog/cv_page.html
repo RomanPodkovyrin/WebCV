@@ -15,8 +15,9 @@
 		
 		<div id="id_contacts">
 			<ul>
-				<li >Email: <a id="id_email">{{ cv.email }}</a></li>
-				<li >Mobile: <a id="id_phone">{{ cv.phone }}</a></li>
+				<span class="glyphicon glyphicon-envelope"></span> Email: <a id="id_email">{{ cv.email }}</a>
+				<br>
+				<span class="glyphicon glyphicon-phone"></span> Mobile: <a id="id_phone">{{ cv.phone }}</a>
 			</ul>
 		</div>
 	</div>
@@ -72,7 +73,7 @@
 			<h2>Key Skills</h1>
 		</div>
 		
-		<div id="id_skill_list_table" >
+		<div class="skill" id="id_skill_list_table" >
 			{% for skill in skills%}
 				<ul id="id_skill">
 					{% if user.is_authenticated %}
